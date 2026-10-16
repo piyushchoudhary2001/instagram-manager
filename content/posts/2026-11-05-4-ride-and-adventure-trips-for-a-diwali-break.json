@@ -1,0 +1,31 @@
+{
+  "id": "2026-11-05-4-ride-and-adventure-trips-for-a-diwali-break",
+  "title": "4 ride-and-adventure trips for a Diwali break",
+  "format": "reel",
+  "pillar": "rides-routes",
+  "status": "idea",
+  "date": "2026-11-05",
+  "time": "19:30",
+  "hook": "Skip the crowded hill station this Diwali.",
+  "cta": "Share with your trip group",
+  "caption": "",
+  "hashtags": [],
+  "altText": "",
+  "slides": [],
+  "facts": [
+    {
+      "claim": "The four routes, their distances and what is at the end",
+      "status": "needs_check",
+      "note": "Verify distances and that the adventure operators at each end are running in November."
+    }
+  ],
+  "notes": "Timed for the Diwali travel window. Routes should be ones you can vouch for, or clearly framed as 'on my list'.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "planned",
+      "note": "On the calendar from the 3-week plan. Not drafted yet."
+    }
+  ]
+}

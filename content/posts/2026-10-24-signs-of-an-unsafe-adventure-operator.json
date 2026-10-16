@@ -1,0 +1,95 @@
+{
+  "id": "2026-10-24-signs-of-an-unsafe-adventure-operator",
+  "title": "7 signs of an unsafe adventure operator",
+  "format": "carousel",
+  "pillar": "trust-safety",
+  "status": "in_review",
+  "date": "2026-10-24",
+  "time": "19:30",
+  "hook": "Check this before you pay for any adventure.",
+  "cta": "Save it, share it",
+  "caption": "Great adventures start with a safe operator. Save this checklist, screenshot it, and send it to whoever is booking your next trip.",
+  "hashtags": ["#adventuresafety", "#traveltips", "#surfing", "#kayaking", "#indiatravel"],
+  "altText": "A nine-slide checklist of seven warning signs that an adventure operator is not safe — no briefing, worn gear, untrained guides, no weather check, too many people per guide, nothing in writing, and no first-aid plan — each with the question to ask before you pay.",
+  "slides": [
+    {
+      "template": "cover",
+      "tone": "sun",
+      "kicker": "Before you book",
+      "title": "Check this before you pay for any adventure.",
+      "body": "Seven signs an operator is cutting corners, and the question to ask about each one.",
+      "icon": "shield"
+    },
+    {
+      "template": "point",
+      "kicker": "Sign one",
+      "step": "1",
+      "title": "No safety briefing before you start",
+      "body": "A good operator tells you what happens before you get in the water or on the rope, not after.",
+      "callout": { "label": "Ask", "text": "What will you cover with us before we go in?" }
+    },
+    {
+      "template": "point",
+      "kicker": "Sign two",
+      "step": "2",
+      "title": "Gear that is worn, missing or does not fit",
+      "body": "Life jackets and helmets only work in the right size, and frayed straps are a decision someone already made.",
+      "callout": { "label": "Ask", "text": "Can I see and try the gear before we start?" }
+    },
+    {
+      "template": "point",
+      "kicker": "Sign three",
+      "step": "3",
+      "title": "Guides with no stated training",
+      "body": "Certifications are not a formality here. An operator who has them will say so without being pushed.",
+      "callout": { "label": "Ask", "text": "Who is leading, and what are their certifications?" }
+    },
+    {
+      "template": "point",
+      "kicker": "Sign four",
+      "step": "4",
+      "title": "No weather or water check on the day",
+      "body": "Conditions decide whether a session happens. An operator who never cancels is telling you something.",
+      "callout": { "label": "Ask", "text": "What happens if conditions turn?" }
+    },
+    {
+      "template": "point",
+      "kicker": "Sign five",
+      "step": "5",
+      "title": "Too many people per guide",
+      "body": "One guide watching fifteen beginners cannot reach you quickly. Smaller groups cost more for a reason.",
+      "callout": { "label": "Ask", "text": "How many people per instructor?" }
+    },
+    {
+      "template": "point",
+      "kicker": "Sign six",
+      "step": "6",
+      "title": "Nothing in writing before you pay",
+      "body": "Inclusions, timings and the cancellation terms should exist somewhere other than a conversation.",
+      "callout": { "label": "Ask", "text": "Can you send this in writing?" }
+    },
+    {
+      "template": "point",
+      "kicker": "Sign seven",
+      "step": "7",
+      "title": "No first-aid kit or emergency plan",
+      "body": "Ask where the nearest hospital is. If nobody knows, that is the answer.",
+      "callout": { "label": "Ask", "text": "What is the plan if someone is hurt?" }
+    },
+    {
+      "template": "cta",
+      "tone": "sun",
+      "title": "Save this before your next booking.",
+      "body": "Send it to whoever is planning your next trip.",
+      "actions": [
+        { "icon": "bookmark", "label": "Save the checklist" },
+        { "icon": "send", "label": "Send it to your trip group" }
+      ]
+    }
+  ],
+  "facts": [],
+  "notes": "Nothing here is a factual claim about a named operator, which is deliberate: it is general guidance any instructor would agree with, so it carries no verification risk. Keep it that way — naming operators turns this into a recommendation.",
+  "history": [
+    { "at": "2026-10-17T00:00:00.000Z", "by": "claude", "action": "drafted", "note": "Written from the Week 1 plan." }
+  ]
+}

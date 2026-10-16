@@ -1,0 +1,31 @@
+{
+  "id": "2026-11-03-what-a-3-day-adventure-trip-actually-cost",
+  "title": "What a 3-day adventure trip actually cost",
+  "format": "carousel",
+  "pillar": "budget",
+  "status": "idea",
+  "date": "2026-11-03",
+  "time": "19:30",
+  "hook": "What a 3-day adventure trip actually cost.",
+  "cta": "Save, comment \"budget\" for more",
+  "caption": "",
+  "hashtags": [],
+  "altText": "",
+  "slides": [],
+  "facts": [
+    {
+      "claim": "The line items and the total",
+      "status": "needs_check",
+      "note": "From your own receipts. Claude cannot check these; you confirm them."
+    }
+  ],
+  "notes": "This one uses your own receipts, which makes it the most trustworthy post of the three weeks — and the only budget post that needs no external checking. Stat slides for the big numbers, a bullets slide for the line items.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "planned",
+      "note": "On the calendar from the 3-week plan. Not drafted yet."
+    }
+  ]
+}

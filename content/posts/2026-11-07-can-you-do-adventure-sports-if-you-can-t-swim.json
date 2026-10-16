@@ -1,0 +1,31 @@
+{
+  "id": "2026-11-07-can-you-do-adventure-sports-if-you-can-t-swim",
+  "title": "Can you do adventure sports if you can't swim?",
+  "format": "carousel",
+  "pillar": "trust-safety",
+  "status": "idea",
+  "date": "2026-11-07",
+  "time": "19:30",
+  "hook": "Scared of water? Read this first.",
+  "cta": "Save, send to a friend who asked",
+  "caption": "",
+  "hashtags": [],
+  "altText": "",
+  "slides": [],
+  "facts": [
+    {
+      "claim": "Which water activities are commonly run for non-swimmers with a life jacket and a guide",
+      "status": "needs_check",
+      "note": "Confirm against operator policies rather than general advice — this is the one post where a wrong answer has a cost."
+    }
+  ],
+  "notes": "The answer is 'for some things, with the right operator' — and the post is really about what an operator should tell you before you book. Keep it to what any instructor would say; no reassurance that outruns the facts.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "planned",
+      "note": "On the calendar from the 3-week plan. Not drafted yet."
+    }
+  ]
+}

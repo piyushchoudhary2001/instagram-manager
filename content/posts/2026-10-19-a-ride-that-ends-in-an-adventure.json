@@ -1,0 +1,67 @@
+{
+  "id": "2026-10-19-a-ride-that-ends-in-an-adventure",
+  "title": "A ride that ends in an adventure",
+  "format": "reel",
+  "pillar": "rides-routes",
+  "status": "drafting",
+  "date": "2026-10-19",
+  "time": "19:30",
+  "hook": "The best part of a ride is where it ends.",
+  "cta": "Comment the adventure you want to try",
+  "caption": "Some rides are about the road. Others are about where they end. Where should the next one end? Comment below.",
+  "hashtags": ["#motorcycleindia", "#roadtrip", "#adventuretravel", "#indiatravel", "#ridersofindia"],
+  "altText": "A 25-second reel from a motorcycle ride that ends at an adventure spot, with the route, the ride time and one practical tip on screen.",
+  "slides": [],
+  "reel": {
+    "durationSec": 25,
+    "hook": "The best part of a ride is where it ends.",
+    "audio": "Ride ambience under a trending track, voiceover from 3 s.",
+    "captionsLanguage": "en",
+    "beats": [
+      { "time": "0–3 s", "onScreen": "The best part of a ride is where it ends.", "voiceover": "", "shot": "Your strongest few seconds of ride footage" },
+      {
+        "time": "3–10 s",
+        "onScreen": "Route and ride time",
+        "voiceover": "Name the place and how long the ride took, from a route you have actually ridden.",
+        "shot": "Arriving at the destination"
+      },
+      {
+        "time": "10–20 s",
+        "onScreen": "What waits at the end",
+        "voiceover": "Show what you did there — or what you would do next time. Only claim what is true.",
+        "shot": "The adventure: kayak, surf, trek, whatever it was"
+      },
+      {
+        "time": "20–25 s",
+        "onScreen": "One tip: best months, or rough cost",
+        "voiceover": "Where should the next one end? Comment below.",
+        "shot": "End frame on the bike or the view"
+      }
+    ],
+    "footage": [
+      "Your own ride clips — this one only works with real footage",
+      "Pick the route first: it is also the route for the Oct 29 reel",
+      "Record the voiceover once the route is picked"
+    ],
+    "cover": {
+      "template": "cover",
+      "tone": "ink",
+      "kicker": "Rides",
+      "title": "The best part of a ride is where it ends.",
+      "body": "A route, a ride time, and what waits at the other end.",
+      "icon": "bike"
+    }
+  },
+  "facts": [
+    {
+      "id": "route-details",
+      "claim": "The route, ride time and any cost or season mentioned on screen",
+      "status": "needs_check",
+      "note": "This is your own ride, so the check is simply: is every number on screen true for the route you actually rode?"
+    }
+  ],
+  "notes": "Waiting on you: which route, and whether you have usable footage. Once you say the route, the beats get the real place name and ride time instead of the brackets, and this goes to review. Keeping your bike content in week one is deliberate — the account turns toward adventure travel without dropping what your current followers follow you for.",
+  "history": [
+    { "at": "2026-10-17T00:00:00.000Z", "by": "claude", "action": "drafted", "note": "Structure and cover ready; needs your route and footage." }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "2026-10-26-5-adventure-sports-under-3-000",
+  "title": "5 adventure sports under ₹3,000",
+  "format": "reel",
+  "pillar": "budget",
+  "status": "idea",
+  "date": "2026-10-26",
+  "time": "19:30",
+  "hook": "Cheaper than a night out.",
+  "cta": "Save, comment your budget",
+  "caption": "",
+  "hashtags": [],
+  "altText": "",
+  "slides": [],
+  "facts": [
+    {
+      "claim": "Five adventure activities in India that currently cost under ₹3,000",
+      "status": "needs_check",
+      "note": "Each price needs an operator page or an official tourism listing, checked the week it posts."
+    }
+  ],
+  "notes": "Every price here is a factual claim and goes stale fast, so the draft starts with the check, not the script. If a price cannot be confirmed from an operator's own page, the activity comes off the list.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "planned",
+      "note": "On the calendar from the 3-week plan. Not drafted yet."
+    }
+  ]
+}

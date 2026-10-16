@@ -1,0 +1,25 @@
+{
+  "id": "2026-10-31-trek-raft-or-surf-which-suits-you",
+  "title": "Trek, raft or surf: which suits you?",
+  "format": "carousel",
+  "pillar": "adventure-101",
+  "status": "idea",
+  "date": "2026-10-31",
+  "time": "19:30",
+  "hook": "Take 60 seconds to pick your first adventure.",
+  "cta": "Comment your result",
+  "caption": "",
+  "hashtags": [],
+  "altText": "",
+  "slides": [],
+  "facts": [],
+  "notes": "A branching 'pick one' carousel — swimming confidence, fitness, time, budget — ending with a slide per answer. Built to be saved and argued with in the comments.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "planned",
+      "note": "On the calendar from the 3-week plan. Not drafted yet."
+    }
+  ]
+}

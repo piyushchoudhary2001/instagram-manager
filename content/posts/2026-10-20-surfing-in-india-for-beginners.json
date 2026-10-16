@@ -1,0 +1,193 @@
+{
+  "id": "2026-10-20-surfing-in-india-for-beginners",
+  "title": "Surfing in India for beginners",
+  "format": "carousel",
+  "pillar": "destination-guides",
+  "status": "in_review",
+  "date": "2026-10-20",
+  "time": "19:30",
+  "hook": "Where should a first-time surfer go?",
+  "cta": "Save for your next trip",
+  "caption": "Your first surf trip starts here: three spots, when to go, and what to ask before you pay. Save this and send it to your surf buddy.",
+  "hashtags": [
+    "#surfingindia",
+    "#learntosurf",
+    "#mulki",
+    "#varkala",
+    "#adventuretravel"
+  ],
+  "altText": "An eight-slide guide to surfing in India for beginners: the October to May beginner window, three spots (Mulki in Karnataka, Varkala in Kerala, Covelong in Tamil Nadu), how they compare, and four questions to ask a surf school before paying.",
+  "slides": [
+    {
+      "template": "cover",
+      "tone": "sun",
+      "kicker": "Surfing in India",
+      "title": "Where should a first-time surfer go?",
+      "body": "Three beginner spots, when to go, and what to ask before you pay.",
+      "icon": "palm-tree"
+    },
+    {
+      "template": "statement",
+      "kicker": "When to go",
+      "title": "October to May is the beginner window on the west coast.",
+      "body": "The season is opening now. Outside it, the monsoon swell is no place to take a first lesson.",
+      "icon": "sunrise"
+    },
+    {
+      "template": "point",
+      "kicker": "Spot one",
+      "step": "1",
+      "title": "Mulki, Karnataka",
+      "body": "About 30 minutes from Mangaluru, and home to India's first surf school, which opened in 2004. It suits beginners and improvers, with friendly conditions from mid-September to May.",
+      "icon": "map-pin",
+      "callout": {
+        "label": "Good for",
+        "text": "A first lesson and calm mornings."
+      }
+    },
+    {
+      "template": "point",
+      "kicker": "Spot two",
+      "step": "2",
+      "title": "Varkala, Kerala",
+      "body": "The season runs October to May and is at its best from November to March; beginners usually aim for November to February. You surf below a cliff lined with places to stay.",
+      "icon": "map-pin",
+      "callout": {
+        "label": "Good for",
+        "text": "Lessons plus a cliff-side stay."
+      }
+    },
+    {
+      "template": "point",
+      "kicker": "Spot three",
+      "step": "3",
+      "title": "Covelong, Tamil Nadu",
+      "body": "Also called Kovalam, about an hour from Chennai, with a real surf culture around the fishing village. This is not the Kovalam in Kerala. August to March is the popular window, and conditions swing week to week, so ask the school what the water is doing before you book.",
+      "icon": "map-pin",
+      "callout": {
+        "label": "Good for",
+        "text": "Surf culture and stronger waves."
+      }
+    },
+    {
+      "template": "bullets",
+      "kicker": "Pick one",
+      "title": "Which spot fits your trip",
+      "listStyle": "icons",
+      "items": [
+        {
+          "icon": "sunrise",
+          "title": "Mulki",
+          "detail": "First lessons, calm mornings, October to May."
+        },
+        {
+          "icon": "bed",
+          "title": "Varkala",
+          "detail": "Lessons plus a cliff-side stay, November to February."
+        },
+        {
+          "icon": "speed",
+          "title": "Covelong",
+          "detail": "Surf culture and stronger waves, August to March."
+        }
+      ]
+    },
+    {
+      "template": "bullets",
+      "kicker": "Before you pay",
+      "title": "Ask any surf school",
+      "listStyle": "checks",
+      "items": [
+        {
+          "title": "What training do the instructors have?",
+          "detail": "Ask what certification they hold, and who is watching the water."
+        },
+        {
+          "title": "Are the board and rash guard included?",
+          "detail": "Rental adds up over a few days."
+        },
+        {
+          "title": "How many students per instructor?",
+          "detail": "Fewer means more time in the water with eyes on you."
+        },
+        {
+          "title": "What happens if conditions are bad?",
+          "detail": "Ask whether the lesson is moved or refunded."
+        }
+      ]
+    },
+    {
+      "template": "cta",
+      "tone": "sun",
+      "title": "Save this for your trip.",
+      "body": "Which spot are you picking? Tell me in the comments.",
+      "actions": [
+        {
+          "icon": "bookmark",
+          "label": "Save this"
+        },
+        {
+          "icon": "send",
+          "label": "Send it to your surf buddy"
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "mulki-first-school",
+      "claim": "India's first surf school opened at Mulki, Karnataka in 2004",
+      "status": "verified",
+      "source": "Lonely Planet, best surfing in India",
+      "note": "Confirmed: Mantra Surf Club, started 2004 by Jack Hebner at Mulki, described as India's first surf school.",
+      "url": "https://www.lonelyplanet.com/articles/best-surfing-in-india"
+    },
+    {
+      "id": "mulki-season",
+      "claim": "Mulki is beginner-friendly from mid-September to May",
+      "status": "verified",
+      "source": "Lonely Planet, best surfing in India",
+      "url": "https://www.lonelyplanet.com/articles/best-surfing-in-india",
+      "note": "Confirmed: mid-September to May is the window given for Mulki."
+    },
+    {
+      "id": "varkala-season",
+      "claim": "Varkala's surf season runs October to May, best November to March, with beginners aiming for November to February",
+      "status": "verified",
+      "source": "Lonely Planet, best surfing in India",
+      "url": "https://www.lonelyplanet.com/articles/best-surfing-in-india",
+      "note": "Lonely Planet: October to May, best November to March. Kerala Tourism gives October to April and says book ahead December to February — the slide stays inside both."
+    },
+    {
+      "id": "covelong-conditions",
+      "claim": "Covelong (Kovalam, Tamil Nadu) is about an hour from Chennai and sources disagree on October–November conditions",
+      "status": "verified",
+      "note": "Confirmed: about an hour from Chennai, August to March the popular season. The slide now gives that window and still says to ask the school.",
+      "source": "Lonely Planet, best surfing in India",
+      "url": "https://www.lonelyplanet.com/articles/best-surfing-in-india"
+    },
+    {
+      "id": "varkala-season-second-source",
+      "claim": "Kerala Tourism gives Varkala's surf season as October to April",
+      "status": "verified",
+      "source": "Kerala Tourism, surfing at Varkala",
+      "url": "https://www.keralatourism.org/adventure-tourism/surfing/varkala",
+      "note": "Kept as the second source behind the Varkala slide."
+    }
+  ],
+  "notes": "Slide 5 gives Covelong's August-to-March window and still tells people to ask the school, because conditions there swing week to week. The 'ask any surf school' slide asks what training instructors have rather than naming a certification body, since that one could not be confirmed. Named schools (Soul & Surf, Point Break, Mantra Surf Club) are left off the slides on purpose: naming an operator is a recommendation, and none are confirmed to be running this season.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "drafted",
+      "note": "Written from the Week 1 plan. Facts still to check."
+    },
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "fact-checked",
+      "note": "Four claims verified against Lonely Planet and Kerala Tourism; the ISA certification line was dropped from the slide rather than guessed at."
+    }
+  ]
+}

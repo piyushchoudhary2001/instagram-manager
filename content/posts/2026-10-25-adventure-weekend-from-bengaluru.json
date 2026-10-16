@@ -1,0 +1,126 @@
+{
+  "id": "2026-10-25-adventure-weekend-from-bengaluru",
+  "title": "A 2-day adventure weekend from Bengaluru",
+  "format": "reel",
+  "pillar": "itineraries",
+  "status": "in_review",
+  "date": "2026-10-25",
+  "time": "19:30",
+  "hook": "Two days, one weekend, zero planning stress.",
+  "cta": "Vote in Stories: surf, kayak or trek next?",
+  "caption": "A weekend of kayaking, coracle rides and forest walks on the Cauvery, about 100 km from Bengaluru. Vote in Stories: surf, kayak or trek next?",
+  "hashtags": [
+    "#bengaluru",
+    "#weekendgetaway",
+    "#kayaking",
+    "#bheemeshwari",
+    "#adventuretravel"
+  ],
+  "altText": "A 30-second reel laying out a two-day adventure weekend on the Cauvery near Bheemeshwari, about 100 km from Bengaluru: drive out, evening coracle ride and kayaking, then a guided nature walk on day two.",
+  "slides": [],
+  "reel": {
+    "durationSec": 30,
+    "hook": "2 days. 1 river. Zero planning stress.",
+    "audio": "River ambience under the voiceover.",
+    "captionsLanguage": "en",
+    "beats": [
+      {
+        "time": "0–3 s",
+        "onScreen": "2 days. 1 river. Zero planning stress.",
+        "voiceover": "",
+        "shot": "River wide shot"
+      },
+      {
+        "time": "3–8 s",
+        "onScreen": "Day 1: drive out, about 100 km",
+        "voiceover": "Leave Bengaluru in the morning. It is about 100 km down Kanakapura road, two to three hours depending on traffic.",
+        "shot": "Road out of the city"
+      },
+      {
+        "time": "8–15 s",
+        "onScreen": "Day 1 evening: coracle ride, kayak",
+        "voiceover": "Settle in, then an evening coracle ride and a kayak on the river.",
+        "shot": "Coracle spinning, paddle in water"
+      },
+      {
+        "time": "15–22 s",
+        "onScreen": "Day 2: guided nature walk",
+        "voiceover": "Day two is a guided nature walk before the drive back.",
+        "shot": "Forest path, birds"
+      },
+      {
+        "time": "22–28 s",
+        "onScreen": "100 km · best months October to March · check current prices",
+        "voiceover": "Best months are October to March. Check current prices and availability before you go.",
+        "shot": "Text over river footage"
+      },
+      {
+        "time": "28–30 s",
+        "onScreen": "Surf, kayak or trek next?",
+        "voiceover": "Vote in Stories.",
+        "shot": "End card with the poll"
+      }
+    ],
+    "footage": [
+      "Your own clips if you have been; otherwise licensed stock of the Cauvery, coracles and kayaking",
+      "Do not imply you have been if you have not — say 'planning to go' in the voiceover instead"
+    ],
+    "cover": {
+      "template": "cover",
+      "tone": "sun",
+      "kicker": "Weekend plan",
+      "title": "2 days on the Cauvery, 100 km from Bengaluru",
+      "body": "Coracle, kayak, forest walk. No planning needed.",
+      "icon": "route"
+    }
+  },
+  "facts": [
+    {
+      "id": "distance",
+      "claim": "Bheemeshwari is about 100 km from Bengaluru",
+      "status": "verified",
+      "source": "Karnataka Tourism; Jungle Lodges' own write-up gives about 90 km via Kanakapura road",
+      "url": "https://karnatakatourism.org/experiences/bheemeshwari-bird-sanctuary",
+      "note": "The script says 100 km and leaves the drive time as two to three hours depending on traffic, which no source states as a fixed number."
+    },
+    {
+      "id": "best-months",
+      "claim": "The best season there is October to March",
+      "status": "verified",
+      "source": "Karnataka Tourism",
+      "url": "https://karnatakatourism.org/experiences/bheemeshwari-bird-sanctuary",
+      "note": "The plan said August to February; Karnataka Tourism says October to March, so the script now follows the tourism board."
+    },
+    {
+      "id": "activities",
+      "claim": "Coracle rides, kayaking and guided nature walks run on this stretch of the Cauvery",
+      "status": "verified",
+      "source": "Jungle Lodges and Resorts (jlrexplore)",
+      "url": "https://jlrexplore.com/by-the-cauvery/",
+      "note": "All three named on Jungle Lodges' own site. Still worth a call before the weekend in case something is paused."
+    },
+    {
+      "id": "zipline",
+      "claim": "A zipline operates in the area",
+      "status": "sourced",
+      "source": "Karnataka Tourism lists zip-lining among the adventure activities",
+      "url": "https://karnatakatourism.org/experiences/bheemeshwari-bird-sanctuary",
+      "note": "Listed, but left out of the script: it is not on Jungle Lodges' own page and availability moves."
+    }
+  ],
+  "notes": "No prices on screen: they change, and a wrong number is exactly what people screenshot. The script sends people to check instead, which is also more useful. Drive time is given as a range rather than a flat 2.5 hours, because no source states a time.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "drafted",
+      "note": "Script and cover from the Week 1 plan. Four facts still to check."
+    },
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "fact-checked",
+      "note": "Distance, season and activities checked against Karnataka Tourism and Jungle Lodges; season corrected from August–February to October–March."
+    }
+  ]
+}

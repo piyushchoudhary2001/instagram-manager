@@ -1,0 +1,32 @@
+{
+  "handle": "@build.it01",
+  "displayName": "build.it01",
+  "timezone": "Asia/Kolkata",
+  "utcOffset": "+05:30",
+  "defaultTime": "19:30",
+  "language": "en",
+  "pillars": [
+    { "id": "adventure-101", "name": "Adventure 101", "why": "First-timer tips that get saved and shared", "target": 3 },
+    { "id": "destination-guides", "name": "Destination guides", "why": "Search-friendly, shows range", "target": 2 },
+    { "id": "trust-safety", "name": "Trust & safety", "why": "Practical checklists people save", "target": 2 },
+    { "id": "rides-routes", "name": "Rides and routes", "why": "The strongest existing content; keeps current followers", "target": 3 },
+    { "id": "budget", "name": "Budget", "why": "Cost breakdowns Indian audiences save", "target": 2 },
+    { "id": "hidden-gems", "name": "Hidden gems", "why": "Discovery and shares", "target": 1 },
+    { "id": "itineraries", "name": "Itineraries", "why": "Direct, plan-able trips", "target": 1 },
+    { "id": "community", "name": "Community", "why": "Poll and recap, ties it together", "target": 1 }
+  ],
+  "goal": {
+    "followers": 10000,
+    "current": 691,
+    "currentAsOf": "2026-10-17",
+    "startDate": "2026-10-17",
+    "endDate": "2027-01-17",
+    "label": "10k in three months"
+  },
+  "plan": {
+    "start": "2026-10-19",
+    "weeks": 3,
+    "weekThemes": ["Launch the account", "Build trust and utility", "Convert and celebrate"]
+  },
+  "hashtagLimits": { "min": 3, "max": 5 }
+}

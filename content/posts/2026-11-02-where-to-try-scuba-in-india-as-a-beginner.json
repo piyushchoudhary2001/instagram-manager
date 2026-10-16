@@ -1,0 +1,36 @@
+{
+  "id": "2026-11-02-where-to-try-scuba-in-india-as-a-beginner",
+  "title": "Where to try scuba in India as a beginner",
+  "format": "reel",
+  "pillar": "destination-guides",
+  "status": "idea",
+  "date": "2026-11-02",
+  "time": "19:30",
+  "hook": "Your first dive doesn't need a passport.",
+  "cta": "Save, tag who you'd dive with",
+  "caption": "",
+  "hashtags": [],
+  "altText": "",
+  "slides": [],
+  "facts": [
+    {
+      "claim": "The dive spots named and their seasons",
+      "status": "needs_check",
+      "note": "Seasons differ by coast; confirm each against a dive centre's own page."
+    },
+    {
+      "claim": "What a beginner 'discover scuba' session typically includes",
+      "status": "needs_check",
+      "note": "Confirm rather than describing from memory."
+    }
+  ],
+  "notes": "Scuba is the one topic here with real safety and certification detail, so the script sticks to where and when, plus what a discover-scuba session includes.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "planned",
+      "note": "On the calendar from the 3-week plan. Not drafted yet."
+    }
+  ]
+}

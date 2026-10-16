@@ -1,0 +1,31 @@
+{
+  "id": "2026-11-01-offbeat-adventure-spots-that-aren-t-crowded",
+  "title": "Offbeat adventure spots that aren't crowded",
+  "format": "reel",
+  "pillar": "hidden-gems",
+  "status": "idea",
+  "date": "2026-11-01",
+  "time": "19:30",
+  "hook": "Skip the crowded spots.",
+  "cta": "Save, comment the one you'd try first",
+  "caption": "",
+  "hashtags": [],
+  "altText": "",
+  "slides": [],
+  "facts": [
+    {
+      "claim": "Each spot named is currently open, reachable and not requiring a permit the viewer will not have",
+      "status": "needs_check",
+      "note": "Check access and any seasonal closures before this is drafted."
+    }
+  ],
+  "notes": "Hidden-gem posts travel furthest and are also the easiest to get wrong. Each spot needs a current source, and anywhere that needs a permit or has access restrictions says so on screen.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "planned",
+      "note": "On the calendar from the 3-week plan. Not drafted yet."
+    }
+  ]
+}

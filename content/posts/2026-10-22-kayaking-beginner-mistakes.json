@@ -1,0 +1,73 @@
+{
+  "id": "2026-10-22-kayaking-beginner-mistakes",
+  "title": "5 mistakes first-time kayakers make",
+  "format": "reel",
+  "pillar": "adventure-101",
+  "status": "in_review",
+  "date": "2026-10-22",
+  "time": "19:30",
+  "hook": "Don't get in a kayak before you watch this.",
+  "cta": "Send to your kayak buddy",
+  "caption": "Five beginner mistakes that make your first paddle harder or riskier than it needs to be. Which one would you have made? Send this to your kayak buddy.",
+  "hashtags": ["#kayaking", "#beginnertips", "#adventuretravel", "#paddling", "#traveltips"],
+  "altText": "A 30-second reel listing five beginner kayaking mistakes: skipping the briefing, paddling with only your arms, holding the paddle wrong, wearing cotton with a loose phone, and ignoring wind and current.",
+  "slides": [],
+  "reel": {
+    "durationSec": 30,
+    "hook": "Don't get in a kayak before you watch this.",
+    "audio": "Voiceover over b-roll. Pick a quiet trending track at low volume.",
+    "captionsLanguage": "en",
+    "beats": [
+      { "time": "0–3 s", "onScreen": "Don't get in a kayak before you watch this", "voiceover": "", "shot": "Hard cut on a paddle hitting water" },
+      {
+        "time": "3–8 s",
+        "onScreen": "1. Skipping the safety briefing",
+        "voiceover": "One: skipping the briefing. Check your life jacket fits and ask what to do if you tip.",
+        "shot": "Guide briefing a group, or a life jacket being buckled"
+      },
+      {
+        "time": "8–13 s",
+        "onScreen": "2. Paddling with just your arms",
+        "voiceover": "Two: use your torso. Rotating your body saves your arms.",
+        "shot": "Side angle of a paddler rotating"
+      },
+      {
+        "time": "13–18 s",
+        "onScreen": "3. Holding the paddle wrong",
+        "voiceover": "Three: ask your guide to check your grip and which way the blade faces.",
+        "shot": "Close up of hands on a paddle shaft"
+      },
+      {
+        "time": "18–23 s",
+        "onScreen": "4. Cotton clothes and a loose phone",
+        "voiceover": "Four: wear quick-dry clothes and keep your phone in a dry bag.",
+        "shot": "Phone going into a dry bag"
+      },
+      {
+        "time": "23–28 s",
+        "onScreen": "5. Ignoring wind and current",
+        "voiceover": "Five: stay inside the area your guide sets. Conditions change fast.",
+        "shot": "Wide shot of open water"
+      },
+      { "time": "28–30 s", "onScreen": "Send this to your kayak buddy", "voiceover": "Send this to your kayak buddy.", "shot": "End card" }
+    ],
+    "footage": [
+      "Your own kayaking clips if you have them",
+      "Otherwise licensed stock (Pexels, Pixabay): paddling, life jacket, dry bag, open water",
+      "A quiet room for the voiceover — about 30 minutes"
+    ],
+    "cover": {
+      "template": "cover",
+      "tone": "sun",
+      "kicker": "Kayaking 101",
+      "title": "5 mistakes first-time kayakers make",
+      "body": "The ones that make a first paddle harder than it needs to be.",
+      "icon": "ship"
+    }
+  },
+  "facts": [],
+  "notes": "This is general beginner guidance, not a safety manual. Say it the way an instructor would, and if your operator briefs it differently, theirs wins. No prices or place claims in this one, which is why it has no facts to check.",
+  "history": [
+    { "at": "2026-10-17T00:00:00.000Z", "by": "claude", "action": "drafted", "note": "Script from the Week 1 plan; cover frame designed." }
+  ]
+}

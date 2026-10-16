@@ -1,0 +1,31 @@
+# dependencies
+node_modules/
+
+# next
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# local secrets (Phase 3: Instagram tokens live here, never in git)
+.env
+.env.*
+!.env.example
+
+# generated output
+exports/
+renders/
+
+# heavy media stays on your machine (images under content/media are fine to commit)
+content/media/**/*.mp4
+content/media/**/*.mov
+content/media/**/*.mkv
+content/media/**/*.wav
+content/media/**/*.mp3
+content/raw/
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/
+npm-debug.log*

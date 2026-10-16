@@ -1,0 +1,31 @@
+{
+  "id": "2026-10-29-a-ride-route-with-an-adventure-at-the-end",
+  "title": "A ride route with an adventure at the end",
+  "format": "reel",
+  "pillar": "rides-routes",
+  "status": "idea",
+  "date": "2026-10-29",
+  "time": "19:30",
+  "hook": "The best part of this ride wasn't the road.",
+  "cta": "Share with your travel partner",
+  "caption": "",
+  "hashtags": [],
+  "altText": "",
+  "slides": [],
+  "facts": [
+    {
+      "claim": "The route, distance and ride time shown on screen",
+      "status": "needs_check",
+      "note": "Your own ride — just make sure every number on screen matches what you actually rode."
+    }
+  ],
+  "notes": "Second ride reel, same requirement as Oct 19: your own footage. Shoot both on the same weekend if the route allows.",
+  "history": [
+    {
+      "at": "2026-10-17T00:00:00.000Z",
+      "by": "claude",
+      "action": "planned",
+      "note": "On the calendar from the 3-week plan. Not drafted yet."
+    }
+  ]
+}
