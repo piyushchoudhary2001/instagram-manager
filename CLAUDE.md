@@ -6,9 +6,10 @@ This is Piyush's Instagram content manager for **@build.it01**. You draft; he ap
 
 1. **Never set a post to `approved` or `posted`.** Those are his. Take a draft as far as `in_review` and stop. The API enforces it; do not work around it by editing JSON.
 2. **Never put the marketplace in the content.** Trilyt and the adventure-travel platform are not announced in these three weeks — no waitlist, no "we're building", no teaser. The content earns the audience; the product comes later. Mentioning it in `notes` for him is fine. Content is not.
-3. **Never handle Instagram or Meta credentials.** They live in his `.env.local`, which is git-ignored. Do not read it, print it, or ask him to paste a token into a chat.
-4. **Facts stay honest.** Any price, season, distance, operator claim or "first/best/only" goes in `facts[]` with `status: "needs_check"` until it is checked against a current source, and then gets the source URL. If something cannot be confirmed, change the slide so the claim is not made — do not soften it and keep it. A post with an unchecked fact cannot be approved, which is the point.
-5. **No placeholders in deliverable text.** Anything in `[square brackets]` blocks approval. If you need information from him, put the question in `notes` and leave the post in `drafting`.
+3. **Never handle Instagram or Meta credentials.** They live in his `.env.local`, which is git-ignored. Do not read it, print it, echo it, or ask him to paste a token into a chat — not even to debug. If something looks like a credentials problem, say which variable is involved and let him check it.
+4. **Never publish.** `POST /api/posts/<id>/publish` is a button he presses. Do not call it, do not curl it, and do not write `status: "posted"` into a file. Building a reel or rendering slides is fine; putting something on the account is not.
+5. **Facts stay honest.** Any price, season, distance, operator claim or "first/best/only" goes in `facts[]` with `status: "needs_check"` until it is checked against a current source, and then gets the source URL. If something cannot be confirmed, change the slide so the claim is not made — do not soften it and keep it. A post with an unchecked fact cannot be approved, which is the point.
+6. **No placeholders in deliverable text.** Anything in `[square brackets]` blocks approval. If you need information from him, put the question in `notes` and leave the post in `drafting`.
 
 ## How to draft
 
@@ -32,10 +33,18 @@ This is Piyush's Instagram content manager for **@build.it01**. You draft; he ap
 ```bash
 npm run validate     # every post: schema, blockers, text fit
 npm run render       # PNGs into renders/ — look at them before saying it is ready
+npm run reel -- <id> --plan   # which clip lands on which beat, without building
 npm run typecheck && npm run build
 ```
 
 Look at the rendered slides. A carousel that validates can still be ugly, and he should not be the one to find that out.
+
+## Reels and publishing
+
+- A reel's script is also its edit list: `src/lib/video/beats.ts` reads the beat times, `render.ts` cuts and captions it. If a beat's timing is wrong the cut is wrong, so write times as `0–3 s`, `3–8 s`.
+- Clips live in `content/media/<post-id>/` and are matched by leading beat number, by a `clip` field on the beat, or in order.
+- Publishing lives in `src/lib/instagram/`. The API limits are real constraints on drafting: **a carousel published through the API can hold 10 images, not 20**, so keep carousels at 10 slides or fewer unless he says he will post that one by hand.
+- Captions and hashtags go out as one string; the 2,200 limit covers both together.
 
 ## Code
 

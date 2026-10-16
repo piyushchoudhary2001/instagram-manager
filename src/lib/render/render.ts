@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
+import { encode as encodeJpeg } from "jpeg-js";
 import { CANVAS, type Post, type Slide } from "../schema";
 import { resolveMedia } from "../store";
 import { loadFonts } from "./fonts";
@@ -69,6 +70,17 @@ export async function renderSlideSvg(slide: Slide, options: RenderOptions): Prom
 export function svgToPng(svg: string, width: number): Buffer {
   const resvg = new Resvg(svg, { fitTo: { mode: "width", value: width }, font: { loadSystemFonts: false } });
   return Buffer.from(resvg.render().asPng());
+}
+
+/**
+ * JPEG, because the publishing API takes JPEG and nothing else. resvg hands back raw RGBA,
+ * so this encodes straight from the pixels rather than round-tripping through a PNG.
+ */
+export function svgToJpeg(svg: string, width: number, quality = 92): Buffer {
+  const resvg = new Resvg(svg, { fitTo: { mode: "width", value: width }, font: { loadSystemFonts: false } });
+  const rendered = resvg.render();
+  const encoded = encodeJpeg({ data: rendered.pixels, width: rendered.width, height: rendered.height }, quality);
+  return Buffer.from(encoded.data);
 }
 
 export async function renderSlidePng(slide: Slide, options: RenderOptions): Promise<{ png: Buffer; overflow: string[] }> {

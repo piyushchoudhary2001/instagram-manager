@@ -76,6 +76,8 @@ export const BeatSchema = z.looseObject({
   onScreen: text.default(""),
   voiceover: text.default(""),
   shot: text.optional(),
+  /** file name inside content/media/<post-id>/, when a beat should use a particular clip */
+  clip: text.optional(),
 });
 export type Beat = z.infer<typeof BeatSchema>;
 
@@ -138,7 +140,13 @@ export const PostSchema = z.looseObject({
     .nullable()
     .optional(),
   published: z
-    .looseObject({ postedAt: text, permalink: text.optional(), mediaId: text.optional() })
+    .looseObject({
+      postedAt: text,
+      permalink: text.optional(),
+      mediaId: text.optional(),
+      /** numbers pulled back from Instagram; metric names are whatever the API returned */
+      insights: z.looseObject({ fetchedAt: text }).optional(),
+    })
     .nullable()
     .optional(),
   history: z.array(HistorySchema).default([]),

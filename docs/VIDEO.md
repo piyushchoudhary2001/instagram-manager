@@ -1,44 +1,66 @@
-# Reels: the editing pipeline
+# Reels: cutting from the script
 
-Phase two. Carousels are fully handled in the app; reels are still a manual edit, and this is the plan for narrowing that down to a review.
+The script in a post — timed beats, the words on screen, the voiceover — is also an edit list. `npm run reel` turns it into a cut.
 
-## What already exists
+```bash
+npm run reel -- 2026-10-22-kayaking-beginner-mistakes
+```
 
-- Every reel post carries a **script** — hook, timed beats with on-screen text and voiceover, the footage it needs, and the caption.
-- The app renders the **cover frame** at 1080 × 1920 with the words held inside the top 1440 px, so the profile grid never crops them. Download it from the post's export pack.
+Needs `ffmpeg` on your machine: `brew install ffmpeg` on macOS, `sudo apt install ffmpeg` on Ubuntu.
 
-That already removes the two slowest parts of an edit: deciding what goes on screen, and designing the cover.
+## Where the clips go
 
-## What the pipeline adds
+```
+content/media/<post-id>/
+  01-river.mp4        → beat 1
+  02-briefing.mp4     → beat 2
+  05-drybag.jpg       → beat 5 (stills get a slow push so they don't read as a freeze)
+  music.mp3           → the bed
+  voiceover.wav       → your narration over the whole thing
+  vo-03.wav           → or one file per beat, if you record them separately
+```
 
-Drop your clips in a folder, connect that folder to a Claude session, and ask for a rough cut. With `ffmpeg` on your machine, Claude can:
+A file that starts with a beat number is pinned to that beat. Everything else fills the remaining beats in order, so you can also just drop six clips in and let it assign them. A beat can also name its clip explicitly with `"clip": "sunset.mp4"` in the post JSON.
 
-| Step | What it does |
+Nothing for a beat? It gets a near-black card with the words on it, so the cut still plays and the gap is obvious. A clip shorter than its beat loops rather than freezing.
+
+## What it does
+
+| | |
 |---|---|
-| **Cut** | Assemble the beats in order, trimming each clip to its beat's duration from the script. |
-| **Captions** | Burn the on-screen text in Manrope, sized and placed by the same rules as the slides. |
-| **Colour** | A consistent grade across clips so a reel does not look like four different cameras. |
-| **Audio** | Level the voiceover, duck the music under it, and strip wind noise where it can. |
-| **Cover** | Attach the cover frame this app renders. |
-| **Overlays** | The handle, and the end card. |
+| **Cuts** | Each beat trimmed to its time from the script. |
+| **Frames** | Scaled and centre-cropped to 1080 × 1920, 30 fps, whatever the source was. |
+| **Grades** | A consistent pass across every clip so a reel doesn't look like four cameras. `--grade warm` (default), `neutral`, or `none`. |
+| **Captions** | The on-screen text burned in, in Manrope ExtraBold, auto-fitted and stacked as boxed lines. The hook sits mid-frame; the rest in the lower third, above Instagram's own buttons. `--no-captions` to skip. |
+| **Audio** | Voiceover levelled, music ducked under it, the whole thing normalised to −14 LUFS, 48 kHz stereo. No audio at all gets a silent track, because a reel with no audio stream can be rejected. |
+| **Cover** | The cover frame this app designs, rendered to `cover.jpg` at 1080 × 1920. |
 
-What it cannot do: pick trending audio. That has to happen in the Instagram app, and it matters enough that the final export is worth doing there — add the track, confirm the cover, post.
+Output lands in `exports/<post-id>/`: `reel.mp4`, `cover.jpg`, `captions.srt`.
+
+## Options
+
+```bash
+npm run reel -- <post-id> --plan                 # show the mapping, build nothing
+npm run reel -- <post-id> --grade none           # skip the colour pass
+npm run reel -- <post-id> --no-captions          # no burned-in text
+npm run reel -- <post-id> --clips ~/Desktop/kayak --music ~/Desktop/track.mp3
+npm run reel -- <post-id> --keep-work            # leave the per-beat files for inspection
+```
+
+The post's **Script** tab shows the same mapping in the app, and plays the cut once it exists.
 
 ## The loop
 
-1. Shoot. Name clips after the beat if you can (`03-paddle.mp4`); it makes the assembly obvious.
-2. Put them in one folder per post: `content/media/<post-id>/`.
-3. Ask Claude for a rough cut against that post's script.
-4. Watch it, say what is wrong ("hold the second clip longer", "captions too low"), get another pass.
-5. Export, open in Instagram, add audio, post.
+1. Shoot vertical. Cropping landscape to 9:16 throws away half the frame.
+2. Name clips after their beat where you can.
+3. `npm run reel -- <post-id>`, watch it.
+4. Say what is wrong — "hold the second clip longer", "captions too low" — and Claude edits the script or the settings; re-run.
+5. Open Instagram, add a trending track, post.
+
+That last step stays manual on purpose: trending audio cannot be attached through the API, and on a new account the track is doing real work for reach. Publishing a reel from the app is possible (see `docs/INSTAGRAM.md`) but it keeps whatever audio is in the file.
 
 ## Settings that matter
 
-- **1080 × 1920, 30 fps.** Shoot vertical; cropping landscape to vertical throws away half your frame.
-- **Under 30 seconds** for these formats. The scripts are written to that.
-- **Captions always.** Most people watch muted.
-- **The first three seconds carry the post.** If the hook is not on screen by 0.5 s, the rest does not get watched.
-
-## Before this can run
-
-Claude needs the folder with your clips connected to the session — the app cannot reach your disk by itself, and that is on purpose. Everything else is already here.
+- **Under 30 seconds.** The scripts are written to that.
+- **Captions always** — most people watch muted.
+- **The first three seconds carry the post.** The hook is on screen from frame one.

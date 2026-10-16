@@ -16,17 +16,20 @@ import {
   newSlide,
 } from "@/lib/schema";
 import { STATUS_HINT, STATUS_LABEL, nextStatuses, reviewIssues, type Issue } from "@/lib/status";
+import { PublishTab } from "./PublishTab";
+import { ReelPanel } from "./ReelPanel";
 import { SlideFields } from "./SlideFields";
 import { StatusChip } from "./StatusChip";
 import { SelectField, TextArea, TextField } from "./fields";
 
-type Tab = "review" | "slides" | "caption" | "script" | "details";
+type Tab = "review" | "slides" | "caption" | "script" | "publish" | "details";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "review", label: "Review" },
   { id: "slides", label: "Slides" },
   { id: "caption", label: "Caption" },
   { id: "script", label: "Script" },
+  { id: "publish", label: "Publish" },
   { id: "details", label: "Details" },
 ];
 
@@ -288,7 +291,11 @@ export function PostEditor({
 
         <div>
           <div className="tabs" role="tablist">
-            {TABS.filter((t) => t.id !== "script" || post.format === "reel").map((t) => (
+            {TABS.filter((t) => {
+              if (t.id === "script") return post.format === "reel";
+              if (t.id === "publish") return post.status === "approved" || post.status === "scheduled" || post.status === "posted";
+              return true;
+            }).map((t) => (
               <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)}>
                 {t.label}
                 {t.id === "review" && errors.length > 0 ? ` (${errors.length})` : ""}
@@ -438,6 +445,20 @@ export function PostEditor({
               onEditCover={() => {
                 setCurrent(-1);
                 setTab("slides");
+              }}
+            />
+          ) : null}
+
+          {tab === "publish" ? (
+            <PublishTab
+              post={post}
+              onPublished={(next, nextEtag) => {
+                setPost(next);
+                setSaved(next);
+                setEtag(nextEtag);
+                setVersion((v) => v + 1);
+                setMessage({ kind: "ok", text: "Published." });
+                router.refresh();
               }}
             />
           ) : null}
@@ -748,6 +769,10 @@ function ScriptTab({
         </span>
       </div>
       <input type="hidden" value={iconNames.length} readOnly />
+
+      <div style={{ marginTop: 32, borderTop: "1px solid var(--border-default)", paddingTop: 8 }}>
+        <ReelPanel postId={post.id} />
+      </div>
     </div>
   );
 }

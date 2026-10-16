@@ -19,7 +19,10 @@ Node 20.9 or newer. No database, no login, no cloud: the content lives in `conte
 | **Review queue** | Everything Claude has drafted, ordered by what needs you. |
 | **Post editor** | Slide-by-slide WYSIWYG, caption, reel script, facts, history. |
 | **Carousel studio** | Eight slide templates rendered to 1080 × 1350 from the Figma tokens, with the type auto-fitted so nothing ever overflows. |
-| **Export pack** | A zip of PNGs, the caption and the alt text, ready to post. |
+| **Reel cutter** | `npm run reel` turns a post's script into a 1080 × 1920 cut: beats trimmed to their times, captions burned in, graded, audio levelled. |
+| **Publishing** | Post an approved carousel or reel straight to Instagram, with the permalink written back into the post file. |
+| **Insights** | Saves, shares, reach and follows pulled back into each post, so the weekly review stops being manual. |
+| **Export pack** | A zip of PNGs, the caption and the alt text, ready to post by hand. |
 | **Brand page** | The tokens, icons and templates as the renderer actually uses them. |
 
 ## How a post moves
@@ -57,9 +60,11 @@ docs/                  workflow, video pipeline, roadmap
 ## Commands
 
 ```bash
-npm run dev        # the app
-npm run validate   # schema, review issues and text overflow for every post
-npm run render     # render every post's slides into renders/ to eyeball them
+npm run dev         # the app
+npm run validate    # schema, review issues and text overflow for every post
+npm run render      # render every post's slides into renders/ to eyeball them
+npm run reel -- <post-id>   # cut a reel from its script (needs ffmpeg)
+npm run insights    # pull Instagram's numbers into the post files
 npm run typecheck
 npm run build
 ```
@@ -68,6 +73,16 @@ npm run build
 
 Point Claude at this repo and ask for what you want — "draft the Oct 27 packing carousel", "make slide 4 shorter", "re-sync the Trilyt tokens from Figma". It edits the JSON; you refresh the app and review. `CLAUDE.md` holds the rules it follows, including the one that matters most: it never marks anything approved or posted.
 
+## Reels
+
+Drop your clips in `content/media/<post-id>/`, name them after the beat they belong to, and run `npm run reel -- <post-id>`. It cuts to the times in the script, burns the on-screen text in Manrope, grades the clips to match, levels the voiceover with the music ducked under it, and renders the cover frame. Needs `ffmpeg`. The details are in `docs/VIDEO.md`.
+
+Adding a trending track stays manual — the API cannot do it, and on a new account the track is doing real work.
+
 ## Publishing
 
-Right now you export the pack and post it yourself. Direct publishing needs a Meta app of your own; the steps and the current state are on the Publishing page, and your credentials belong in `.env.local`, which is git-ignored — they stay on your machine and never go into a chat.
+Set up a Meta app once (`docs/INSTAGRAM.md`), put the credentials in `.env.local`, and an approved post can go out from its Publish tab. Afterwards `npm run insights` pulls the saves, shares, reach and follows back into the post files.
+
+Your credentials stay on your machine: `.env.local` is git-ignored, the app only ever reports whether a value is set, and token-shaped strings are stripped out of errors. Don't paste a token into a chat.
+
+Two limits worth knowing up front: a carousel can carry at most 10 images through the API, and Instagram fetches the media from a public URL rather than taking an upload — so publishing needs the app briefly reachable from the internet.
