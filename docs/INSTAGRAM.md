@@ -11,9 +11,14 @@ Your credentials live in `.env.local` on your machine. That file is git-ignored,
 
 ## 1. Create the app
 
-1. developers.facebook.com → My Apps → Create App.
-2. Pick the use case that includes **Instagram**, name it anything (`build.it01 manager` is fine).
-3. In the app, add the **Instagram** product.
+Start at [developers.facebook.com/apps/creation](https://developers.facebook.com/apps/creation/) — the "Build with us" menu on the homepage is for other products and does not lead here.
+
+1. **App details** — a name (`build.it01 manager` is fine) and a contact email. Next.
+2. **Use cases** — pick **Manage messaging & content on Instagram**. This is the one: it carries `instagram_business_basic`, `instagram_business_content_publish` and `instagram_business_manage_insights`, which is exactly what this app uses. Incompatible use cases grey out once you pick it, and a use case **cannot be removed later**, so take the right one now. Next.
+3. **Business** — choose *I don't want to connect a business portfolio yet*. A portfolio is only needed for data you do not own, and you own this account. Next.
+4. **Requirements**, then **Overview** → **Go to dashboard**.
+
+There is no longer an app-type screen; the use case sets that up for you.
 
 There are two ways Meta lets an app talk to Instagram, and they use different hosts:
 
@@ -28,21 +33,25 @@ There are two ways Meta lets an app talk to Instagram, and they use different ho
 
 ## 2. Permissions
 
-Ask for these scopes when you generate the token:
+On the dashboard, open the use case and customise it. `public_profile` comes as standard; tick these three:
 
 - `instagram_business_basic` — read the account
 - `instagram_business_content_publish` — post
 - `instagram_business_manage_insights` — read the numbers
 
-(On the Facebook path these are `instagram_basic`, `instagram_content_publish`, `instagram_manage_insights` plus `pages_read_engagement`.)
+Nothing else is needed. (On the Facebook path they are `instagram_basic`, `instagram_content_publish`, `instagram_manage_insights` plus `pages_read_engagement`.)
 
-Standard Access is enough for an account you own and have added to your own app.
+Standard Access is enough for an account you own and have added to your own app — no App Review.
 
 ## 3. Get a long-lived token
 
-Short-lived tokens last an hour, which is useless here. From the app's Instagram settings, generate an access token for the account and exchange it for a long-lived one — those last about 60 days and can be refreshed before they expire. Meta's "Generate token" button in the Instagram product panel does this for you.
+Short-lived tokens last an hour, which is useless here. In the dashboard go to **Instagram → API setup with Instagram business login**, click **Generate token** next to @build.it01 and log in. That gives you a token good for about 60 days, refreshable before it expires.
 
-Note the **Instagram account ID** shown next to it (a long number, not the handle).
+The same panel usually shows the **Instagram account ID**. If it doesn't, paste this in a browser once you have the token — the `user_id` it returns is the ID:
+
+```
+https://graph.instagram.com/v26.0/me?fields=user_id,username&access_token=YOUR_TOKEN
+```
 
 ## 4. Fill in .env.local
 
@@ -54,7 +63,7 @@ cp .env.example .env.local
 INSTAGRAM_ACCESS_TOKEN=…            # the long-lived token
 INSTAGRAM_ACCOUNT_ID=178414…        # the numeric id
 INSTAGRAM_LOGIN=instagram
-INSTAGRAM_API_VERSION=v26.0         # bump when Meta ships a new one
+INSTAGRAM_API_VERSION=v26.0         # current as of Jul 2026; bump when Meta ships a new one
 PUBLIC_MEDIA_BASE_URL=              # see below
 ```
 
