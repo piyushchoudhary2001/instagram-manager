@@ -25,6 +25,8 @@ This is Piyush's Instagram content manager for **@build.it01**. You draft; he ap
 
 - Colours, type, spacing and radii come from `brand/trilyt.tokens.json`; icons from `brand/icons.json`. Never hard-code a hex value — add a token or use the semantic name.
 - Light mode is the default across the slides and the app. The orange→yellow gradient is for covers and closing cards only; inside the carousel it is paper, ink and hairlines.
+- A `cover`, `statement`, `photo` or `cta` slide can carry a photograph: set `image` to a file name in `content/media/<post-id>/`, and the renderer handles the crop, the scrim and the switch to light type. Use them for the cover and the odd breather slide — the information slides stay on paper, because text over a photo is harder to read than text on paper.
+- Only use photographs Piyush owns or that are licensed for commercial use. Never put an AI-generated image of a real place in a post that describes that place as it is.
 - Re-syncing from Figma is a Claude job, not an app feature: Figma's Variables REST API is Enterprise-only, so use the Figma MCP connection to read the variable collections in file `r2yheI0iL4FlQ1sNkCW3Go` and rewrite the two brand files. The git diff is the review.
 - There is no Trilyt logo in the Figma file. Do not invent one.
 

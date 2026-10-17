@@ -27,6 +27,7 @@ export async function GET(request: Request, { params }: Params) {
       index: wantCover ? 0 : Number(index),
       total: wantCover ? 1 : post.slides.length,
       reelCover: wantCover,
+      postId: id,
     });
 
     const headers: Record<string, string> = {

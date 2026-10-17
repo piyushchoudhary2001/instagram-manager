@@ -87,7 +87,7 @@ export function PostEditor({
         const response = await fetch("/api/preview", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slide, index, total, reelCover }),
+          body: JSON.stringify({ slide, index, total, reelCover, postId: post.id }),
         });
         const data = await response.json();
         if (response.ok) setPreviewSvg(data.svg as string);
@@ -416,7 +416,12 @@ export function PostEditor({
                 </select>
               </div>
               {stageSlide ? (
-                <SlideFields slide={stageSlide} iconNames={iconNames} onChange={(slide) => updateSlide(current, slide)} />
+                <SlideFields
+                  slide={stageSlide}
+                  iconNames={iconNames}
+                  postId={post.id}
+                  onChange={(slide) => updateSlide(current, slide)}
+                />
               ) : (
                 <p className="muted">Pick a slide to edit it.</p>
               )}

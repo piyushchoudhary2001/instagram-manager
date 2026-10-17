@@ -189,10 +189,14 @@ export function addHistory(post: Post, by: "claude" | "you" | "system", action: 
  * Resolve a media reference ("content/media/x.jpg", "media/x.jpg" or "x.jpg") to an absolute path.
  * The turbopackIgnore comments keep the bundler from tracing the whole project because of these joins.
  */
-export function resolveMedia(ref: string): string {
+export function resolveMedia(ref: string, postId?: string): string[] {
   const cleaned = ref.replace(/^\.?\//, "");
-  if (path.isAbsolute(ref)) return ref;
-  if (cleaned.startsWith("content/media/")) return path.join(/* turbopackIgnore: true */ contentDir(), cleaned.slice("content/".length));
-  if (cleaned.startsWith("media/")) return path.join(/* turbopackIgnore: true */ contentDir(), cleaned);
-  return path.join(/* turbopackIgnore: true */ mediaDir(), cleaned);
+  if (path.isAbsolute(ref)) return [ref];
+  if (cleaned.startsWith("content/media/")) return [path.join(/* turbopackIgnore: true */ contentDir(), cleaned.slice("content/".length))];
+  if (cleaned.startsWith("media/")) return [path.join(/* turbopackIgnore: true */ contentDir(), cleaned)];
+  // A bare name belongs to the post's own folder; the flat folder is the older layout.
+  const candidates: string[] = [];
+  if (postId) candidates.push(path.join(/* turbopackIgnore: true */ mediaDir(), postId, cleaned));
+  candidates.push(path.join(/* turbopackIgnore: true */ mediaDir(), cleaned));
+  return candidates;
 }

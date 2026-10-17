@@ -173,6 +173,8 @@ function frame(
     align?: "center" | "flex-start" | "flex-end";
     /** extra space below the footer — the part of a reel cover the grid crops away */
     bottomInset?: number;
+    /** a photograph as the slide's background, with the scrim that goes over it */
+    photo?: { src: string; scrim: string };
   } = {},
 ): Node {
   const p = tonePalette(tone);
@@ -191,7 +193,12 @@ function frame(
     justifyContent: "space-between",
     overflow: "hidden",
   };
-  if (p.isGradient) base.backgroundImage = gradient.css;
+  if (options.photo) {
+    // The scrim is the first layer, so it sits over the photograph and under everything else.
+    base.backgroundImage = `${options.photo.scrim}, url(${options.photo.src})`;
+    base.backgroundSize = "cover, cover";
+    base.backgroundPosition = "center, center";
+  } else if (p.isGradient) base.backgroundImage = gradient.css;
   else base.backgroundColor = p.background;
   return col(base, [
     ...(options.decoration ?? []),
@@ -231,6 +238,34 @@ const CONTENT = CANVAS.carousel.width - MARGIN * 2;
 
 /* ---------------------------------------------------------------- templates */
 
+/**
+ * A photograph behind the words.
+ *
+ * Both the picture and the scrim over it are background layers on the frame itself rather
+ * than elements inside it. Satori paints images and absolutely positioned children after
+ * the text, so a backdrop built from elements ends up on top of the headline; a background
+ * is painted first, as a background should be. The scrim is heavier where the type sits so
+ * the words hold up against whatever the photo is doing, and a slide on a photo switches
+ * its chrome to the dark tone to keep the pill and the handle legible.
+ */
+interface PhotoBackdrop {
+  photo?: { src: string; scrim: string };
+  onPhoto: boolean;
+}
+
+function photoBackdrop(slide: Slide, ctx: RenderContext, weight: "bottom" | "even" = "bottom"): PhotoBackdrop {
+  const src = slide.image ? ctx.images?.[slide.image] : undefined;
+  if (!src) {
+    if (slide.image) note(ctx, `Slide ${ctx.index + 1} refers to an image that is not in the post's media folder (${slide.image})`);
+    return { onPhoto: false };
+  }
+  const scrim =
+    weight === "bottom"
+      ? "linear-gradient(180deg, rgba(15,15,15,0.42) 0%, rgba(15,15,15,0.18) 30%, rgba(15,15,15,0.72) 62%, rgba(15,15,15,0.94) 100%)"
+      : "linear-gradient(180deg, rgba(15,15,15,0.70) 0%, rgba(15,15,15,0.78) 100%)";
+  return { photo: { src, scrim }, onPhoto: true };
+}
+
 function coverSlide(
   slide: Slide,
   tone: ToneName,
@@ -238,7 +273,9 @@ function coverSlide(
   size: { width: number; height: number } = CANVAS.carousel,
   bottomInset = 0,
 ): Node {
-  const p = tonePalette(tone);
+  const photo = photoBackdrop(slide, ctx, "bottom");
+  const chromeTone: ToneName = photo.onPhoto ? "ink" : tone;
+  const p = tonePalette(chromeTone);
   const tall = size.height - bottomInset > 1500;
   const width = size.width - MARGIN * 2;
   const body: unknown[] = [];
@@ -253,7 +290,7 @@ function coverSlide(
   }
   if (slide.body) {
     body.push(
-      fitted(slide.body, Math.round(width * 0.86), scaleOf("lead", { max: 46, min: 32 }), p.muted, ctx, {
+      fitted(slide.body, Math.round(width * 0.86), scaleOf("lead", { max: 46, min: 32 }), photo.onPhoto ? "rgba(250,250,250,0.88)" : p.muted, ctx, {
         maxLines: 4,
         label: "Subtitle",
         marginTop: 36,
@@ -261,19 +298,22 @@ function coverSlide(
     );
   }
   body.push(h("div", { display: "flex", height: 56 }, ""));
-  return frame(tone, ctx, body, {
+  return frame(chromeTone, ctx, body, {
     width: size.width,
     height: size.height,
     bottomInset,
     cue: "swipe",
     align: "flex-end",
-    header: header(slide, tone, { ...ctx, total: 1 }, width),
-    decoration: [...(tone === "sun" ? rings() : []), ...cornerMark(slide.icon ?? "mountain", tone)],
+    photo: photo.photo,
+    header: header(slide, chromeTone, { ...ctx, total: 1 }, width),
+    decoration: photo.onPhoto ? [] : [...(tone === "sun" ? rings() : []), ...cornerMark(slide.icon ?? "mountain", tone)],
   });
 }
 
 function statementSlide(slide: Slide, tone: ToneName, ctx: RenderContext): Node {
-  const p = tonePalette(tone);
+  const photo = photoBackdrop(slide, ctx, "even");
+  const chromeTone: ToneName = photo.onPhoto ? "ink" : tone;
+  const p = tonePalette(chromeTone);
   const body: unknown[] = [
     h("div", { display: "flex", width: 140, height: 8, backgroundColor: p.accent, borderRadius: 4, marginBottom: 48 }, ""),
   ];
@@ -283,7 +323,11 @@ function statementSlide(slide: Slide, tone: ToneName, ctx: RenderContext): Node 
   if (slide.body) {
     body.push(fitted(slide.body, Math.round(CONTENT * 0.9), scaleOf("body", { max: 40, min: 28 }), p.muted, ctx, { maxLines: 5, label: "Body", marginTop: 40 }));
   }
-  return frame(tone, ctx, body, { header: header(slide, tone, ctx), decoration: watermark(slide.icon, tone) });
+  return frame(chromeTone, ctx, body, {
+    photo: photo.photo,
+    header: header(slide, chromeTone, ctx),
+    decoration: photo.onPhoto ? [] : watermark(slide.icon, tone),
+  });
 }
 
 function pointSlide(slide: Slide, tone: ToneName, ctx: RenderContext): Node {
@@ -461,53 +505,35 @@ function statSlide(slide: Slide, tone: ToneName, ctx: RenderContext): Node {
 }
 
 function photoSlide(slide: Slide, tone: ToneName, ctx: RenderContext): Node {
-  const p = tonePalette(tone);
-  const src = slide.image ? ctx.images?.[slide.image] : undefined;
-  if (!src) note(ctx, `Slide ${ctx.index + 1} has no usable image (${slide.image ?? "none"})`);
-  const decoration: unknown[] = [];
-  if (src) {
-    decoration.push({
-      type: "img",
-      props: {
-        src,
-        width: CANVAS.carousel.width,
-        height: CANVAS.carousel.height,
-        style: { position: "absolute", left: 0, top: 0, objectFit: "cover" },
-      },
-    });
-    decoration.push(
-      h(
-        "div",
-        {
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: CANVAS.carousel.width,
-          height: CANVAS.carousel.height,
-          backgroundImage: "linear-gradient(180deg, rgba(15,15,15,0.55) 0%, rgba(15,15,15,0.1) 42%, rgba(15,15,15,0.82) 100%)",
-        },
-        "",
-      ),
-    );
-  }
-  const textColor = src ? primitive("Neutral/50") : p.text;
-  const mutedColor = src ? "rgba(250,250,250,0.84)" : p.muted;
+  const photo = photoBackdrop(slide, ctx, "bottom");
+  const chromeTone: ToneName = photo.onPhoto ? "ink" : tone;
+  const p = tonePalette(chromeTone);
+  const textColor = photo.onPhoto ? primitive("Neutral/50") : p.text;
+  const mutedColor = photo.onPhoto ? "rgba(250,250,250,0.86)" : p.muted;
+
   const body: unknown[] = [h("div", { display: "flex", flexGrow: 1 }, "")];
   if (slide.title) {
     body.push(fitted(slide.title, CONTENT, scaleOf("title", { max: 92, min: 52 }), textColor, ctx, { maxLines: 4, maxHeight: 420, label: "Caption" }));
   }
   if (slide.body) {
-    body.push(fitted(slide.body, Math.round(CONTENT * 0.88), scaleOf("body", { max: 36, min: 26 }), mutedColor, ctx, { maxLines: 4, label: "Body", marginTop: 24 }));
+    body.push(
+      fitted(slide.body, Math.round(CONTENT * 0.88), scaleOf("body", { max: 36, min: 26 }), mutedColor, ctx, {
+        maxLines: 4,
+        label: "Body",
+        marginTop: 24,
+      }),
+    );
   }
-  const toneForChrome: ToneName = src ? "ink" : tone;
-  return frame(toneForChrome, ctx, body, {
-    header: slide.kicker ? header(slide, src ? "ink" : tone, ctx) : header({ ...slide, kicker: undefined }, src ? "ink" : tone, ctx),
-    decoration,
+  return frame(chromeTone, ctx, body, {
+    photo: photo.photo,
+    header: header(slide, chromeTone, ctx),
   });
 }
 
 function ctaSlide(slide: Slide, tone: ToneName, ctx: RenderContext): Node {
-  const p = tonePalette(tone);
+  const photo = photoBackdrop(slide, ctx, "even");
+  const chromeTone: ToneName = photo.onPhoto ? "ink" : tone;
+  const p = tonePalette(chromeTone);
   const body: unknown[] = [];
   if (slide.title) {
     body.push(fitted(slide.title, CONTENT, scaleOf("title", { max: 104, min: 58 }), p.text, ctx, { maxLines: 4, maxHeight: 460, label: "CTA" }));
@@ -540,10 +566,11 @@ function ctaSlide(slide: Slide, tone: ToneName, ctx: RenderContext): Node {
       ),
     );
   }
-  return frame(tone, ctx, body, {
+  return frame(chromeTone, ctx, body, {
     cue: "none",
-    header: header(slide, tone, ctx),
-    decoration: tone === "sun" ? rings() : watermark(slide.icon, tone),
+    photo: photo.photo,
+    header: header(slide, chromeTone, ctx),
+    decoration: photo.onPhoto ? [] : tone === "sun" ? rings() : watermark(slide.icon, tone),
   });
 }
 

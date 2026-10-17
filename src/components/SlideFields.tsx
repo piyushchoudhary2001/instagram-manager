@@ -1,6 +1,7 @@
 "use client";
 
 import { TEMPLATES, TONES, type Slide, type Template, type Tone, newSlide } from "@/lib/schema";
+import { ImagePicker } from "./ImagePicker";
 import { Field, SelectField, TextArea, TextField } from "./fields";
 
 const TEMPLATE_HINT: Record<Template, string> = {
@@ -51,10 +52,12 @@ export function SlideFields({
   slide,
   onChange,
   iconNames,
+  postId,
 }: {
   slide: Slide;
   onChange: (slide: Slide) => void;
   iconNames: string[];
+  postId: string;
 }) {
   const set = (patch: Partial<Slide>) => onChange({ ...slide, ...patch });
   const t = slide.template;
@@ -243,14 +246,8 @@ export function SlideFields({
         />
       ) : null}
 
-      {t === "photo" ? (
-        <TextField
-          label="Image"
-          value={slide.image ?? ""}
-          placeholder="content/media/your-photo.jpg"
-          hint="a file under content/media"
-          onChange={(image) => set({ image })}
-        />
+      {["cover", "statement", "photo", "cta"].includes(t) ? (
+        <ImagePicker postId={postId} value={slide.image} onChange={(image) => set({ image })} />
       ) : null}
 
       {t !== "bullets" && t !== "compare" ? <IconPicker names={iconNames} label="Icon" value={slide.icon} onChange={(icon) => set({ icon })} /> : null}

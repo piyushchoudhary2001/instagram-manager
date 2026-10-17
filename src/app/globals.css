@@ -1089,3 +1089,52 @@ h3 {
     grid-template-columns: 76px minmax(0, 1fr);
   }
 }
+
+/* ---------------------------------------------------------------- image picker */
+
+.dropzone--slim {
+  min-height: 48px;
+  margin: 6px 0 0;
+  padding: 10px;
+  font-size: 12.5px;
+}
+
+.picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.picker__item,
+.picker__none {
+  padding: 0;
+  border: 2px solid var(--border-default);
+  border-radius: 10px;
+  background: var(--background-card);
+  cursor: pointer;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.picker__item img {
+  display: block;
+  width: 74px;
+  height: 56px;
+  object-fit: cover;
+}
+
+.picker__item--on,
+.picker__none--on {
+  border-color: var(--neutral-950);
+}
+
+.picker__none {
+  width: 74px;
+  height: 56px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  line-height: 52px;
+  text-align: center;
+}

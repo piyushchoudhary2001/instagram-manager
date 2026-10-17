@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
  * while you type instead of a guess.
  */
 export async function POST(request: Request) {
-  let body: { slide?: unknown; index?: number; total?: number; reelCover?: boolean };
+  let body: { slide?: unknown; index?: number; total?: number; reelCover?: boolean; postId?: string };
   try {
     body = (await request.json()) as typeof body;
   } catch {
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
       index: body.index ?? 0,
       total: body.total ?? 1,
       reelCover: body.reelCover ?? false,
+      postId: body.postId,
     });
     return NextResponse.json({ svg: rendered.svg, width: rendered.width, height: rendered.height, overflow: rendered.overflow });
   } catch (error) {

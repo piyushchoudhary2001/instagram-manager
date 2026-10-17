@@ -22,21 +22,23 @@ const MIME: Record<string, string> = {
   ".gif": "image/gif",
 };
 
-async function imageDataUri(ref: string): Promise<string | null> {
-  try {
-    const file = resolveMedia(ref);
+async function imageDataUri(ref: string, postId?: string): Promise<string | null> {
+  for (const file of resolveMedia(ref, postId)) {
     const mime = MIME[path.extname(file).toLowerCase()];
-    if (!mime) return null;
-    const bytes = await fs.readFile(file);
-    return `data:${mime};base64,${bytes.toString("base64")}`;
-  } catch {
-    return null;
+    if (!mime) continue;
+    try {
+      const bytes = await fs.readFile(file);
+      return `data:${mime};base64,${bytes.toString("base64")}`;
+    } catch {
+      // try the next candidate
+    }
   }
+  return null;
 }
 
-async function collectImages(slides: Slide[]): Promise<Record<string, string>> {
+async function collectImages(slides: Slide[], postId?: string): Promise<Record<string, string>> {
   const refs = [...new Set(slides.map((s) => s.image).filter((v): v is string => Boolean(v)))];
-  const entries = await Promise.all(refs.map(async (ref) => [ref, await imageDataUri(ref)] as const));
+  const entries = await Promise.all(refs.map(async (ref) => [ref, await imageDataUri(ref, postId)] as const));
   return Object.fromEntries(entries.filter((e): e is readonly [string, string] => e[1] !== null));
 }
 
@@ -47,6 +49,8 @@ export interface RenderOptions {
   /** render the 1080×1920 reel cover instead of the 1080×1350 carousel frame */
   reelCover?: boolean;
   images?: Record<string, string>;
+  /** so a bare image name resolves inside this post's own media folder */
+  postId?: string;
 }
 
 export interface RenderedSlide {
@@ -59,7 +63,7 @@ export interface RenderedSlide {
 
 export async function renderSlideSvg(slide: Slide, options: RenderOptions): Promise<RenderedSlide> {
   const size = options.reelCover ? { width: CANVAS.reelCover.width, height: CANVAS.reelCover.height } : CANVAS.carousel;
-  const images = options.images ?? (await collectImages([slide]));
+  const images = options.images ?? (await collectImages([slide], options.postId));
   const overflow: string[] = [];
   const ctx: RenderContext = { handle: options.handle, index: options.index, total: options.total, images, overflow };
   const tree = options.reelCover ? buildReelCover(slide, ctx) : buildSlide(slide, ctx);
@@ -97,14 +101,14 @@ export interface RenderedPost {
 /** Every slide of a post, plus a reel cover when the post is a reel with one. */
 export async function renderPost(post: Post, handle: string): Promise<RenderedPost> {
   const all = [...post.slides, ...(post.reel?.cover ? [post.reel.cover] : [])];
-  const images = await collectImages(all);
+  const images = await collectImages(all, post.id);
   const slides: RenderedSlide[] = [];
   for (let i = 0; i < post.slides.length; i++) {
-    slides.push(await renderSlideSvg(post.slides[i], { handle, index: i, total: post.slides.length, images }));
+    slides.push(await renderSlideSvg(post.slides[i], { handle, index: i, total: post.slides.length, images, postId: post.id }));
   }
   let cover: RenderedSlide | undefined;
   if (post.reel?.cover) {
-    cover = await renderSlideSvg(post.reel.cover, { handle, index: 0, total: 1, reelCover: true, images });
+    cover = await renderSlideSvg(post.reel.cover, { handle, index: 0, total: 1, reelCover: true, images, postId: post.id });
   }
   const overflow = [...slides.flatMap((s) => s.overflow), ...(cover?.overflow ?? [])];
   return { slides, cover, overflow };

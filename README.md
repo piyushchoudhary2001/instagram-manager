@@ -18,7 +18,7 @@ Node 20.9 or newer. No database, no login, no cloud: the content lives in `conte
 | **Calendar** | Three weeks at a glance, with the real cover of every post. |
 | **Review queue** | Everything Claude has drafted, ordered by what needs you. |
 | **Post editor** | Slide-by-slide WYSIWYG, caption, reel script, facts, history. |
-| **Carousel studio** | Eight slide templates rendered to 1080 × 1350 from the Figma tokens, with the type auto-fitted so nothing ever overflows. |
+| **Carousel studio** | Eight slide templates rendered to 1080 × 1350 from the Figma tokens, with the type auto-fitted so nothing ever overflows. Drop a photo onto a slide and it becomes the background, scrim and white type handled. |
 | **Reel editor** | Drop clips in, set which clip and what trim each beat gets, and build a 1080 × 1920 cut in the page — captions burned in, graded, audio levelled. |
 | **Publishing** | Post an approved carousel or reel straight to Instagram, with the permalink written back into the post file. |
 | **Insights** | Saves, shares, reach and follows pulled back into each post, so the weekly review stops being manual. |
