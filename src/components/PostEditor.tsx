@@ -17,7 +17,7 @@ import {
 } from "@/lib/schema";
 import { STATUS_HINT, STATUS_LABEL, nextStatuses, reviewIssues, type Issue } from "@/lib/status";
 import { PublishTab } from "./PublishTab";
-import { ReelPanel } from "./ReelPanel";
+import { ReelEditor } from "./ReelEditor";
 import { SlideFields } from "./SlideFields";
 import { StatusChip } from "./StatusChip";
 import { SelectField, TextArea, TextField } from "./fields";
@@ -50,7 +50,7 @@ export function PostEditor({
   const [post, setPost] = useState<Post>(initialPost);
   const [saved, setSaved] = useState<Post>(initialPost);
   const [etag, setEtag] = useState(initialEtag);
-  const [tab, setTab] = useState<Tab>(initialPost.format === "reel" && initialPost.slides.length === 0 ? "script" : "review");
+  const [tab, setTab] = useState<Tab>(initialPost.format === "reel" ? "script" : initialPost.slides.length > 0 ? "slides" : "review");
   // -1 is the reel cover; a reel with no slides opens on it.
   const [current, setCurrent] = useState(initialPost.slides.length > 0 ? 0 : -1);
   const [busy, setBusy] = useState<string | null>(null);
@@ -248,10 +248,24 @@ export function PostEditor({
 
       <div className="editor">
         <div className="stage">
-          <div className="stage__frame">
+          <button
+            type="button"
+            className="stage__frame"
+            title="Click to edit this slide"
+            onClick={() => {
+              if (stageSlide) setTab("slides");
+            }}
+          >
             {previewSvg ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={svgSrc(previewSvg)} alt={stageSlide?.alt ?? "Slide preview"} />
+            ) : stageSlide ? (
+              // The live render is still coming; show the saved one rather than an empty box.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={`/api/posts/${post.id}/preview/${current === -1 ? 0 : current}${current === -1 ? "?cover=1&v=" : "?v="}${version}`}
+                alt="Slide preview"
+              />
             ) : (
               <div className="empty" style={{ border: "none" }}>
                 {post.format === "reel"
@@ -259,7 +273,7 @@ export function PostEditor({
                   : "No slides yet. Add one in the Slides tab."}
               </div>
             )}
-          </div>
+          </button>
           <div className="filmstrip">
             {coverSlide ? (
               <button type="button" aria-pressed={current === -1} onClick={() => setCurrent(-1)} title="Reel cover">
@@ -440,7 +454,6 @@ export function PostEditor({
           {tab === "script" && post.format === "reel" ? (
             <ScriptTab
               post={post}
-              iconNames={iconNames}
               onChange={patch}
               onEditCover={() => {
                 setCurrent(-1);
@@ -645,12 +658,10 @@ function ReviewTab({
 
 function ScriptTab({
   post,
-  iconNames,
   onChange,
   onEditCover,
 }: {
   post: Post;
-  iconNames: string[];
   onChange: (changes: Partial<Post>) => void;
   onEditCover: () => void;
 }) {
@@ -660,7 +671,7 @@ function ScriptTab({
     <div>
       <TextField label="Hook (the first three seconds)" value={reel.hook} onChange={(hook) => set({ hook })} />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        <TextField label="Audio" value={reel.audio} hint="trending track or voiceover" onChange={(audio) => set({ audio })} />
+        <TextField label="Audio" value={reel.audio} hint="the track you will add in Instagram" onChange={(audio) => set({ audio })} />
         <SelectField
           label="Captions"
           value={reel.captionsLanguage}
@@ -673,85 +684,7 @@ function ScriptTab({
         />
       </div>
 
-      <div className="field__label" style={{ marginTop: 10 }}>
-        Beats
-      </div>
-      <table className="beats">
-        <thead>
-          <tr>
-            <th style={{ width: 86 }}>Time</th>
-            <th>On screen</th>
-            <th>Voiceover</th>
-            <th style={{ width: 28 }} />
-          </tr>
-        </thead>
-        <tbody>
-          {reel.beats.map((beat, i) => (
-            <tr key={i}>
-              <td>
-                <input
-                  className="input"
-                  value={beat.time}
-                  onChange={(e) => {
-                    const beats = [...reel.beats];
-                    beats[i] = { ...beat, time: e.target.value };
-                    set({ beats });
-                  }}
-                />
-              </td>
-              <td>
-                <textarea
-                  className="textarea"
-                  style={{ minHeight: 56 }}
-                  value={beat.onScreen}
-                  onChange={(e) => {
-                    const beats = [...reel.beats];
-                    beats[i] = { ...beat, onScreen: e.target.value };
-                    set({ beats });
-                  }}
-                />
-              </td>
-              <td>
-                <textarea
-                  className="textarea"
-                  style={{ minHeight: 56 }}
-                  value={beat.voiceover}
-                  onChange={(e) => {
-                    const beats = [...reel.beats];
-                    beats[i] = { ...beat, voiceover: e.target.value };
-                    set({ beats });
-                  }}
-                />
-              </td>
-              <td>
-                <button
-                  className="btn btn--small btn--ghost"
-                  onClick={() => set({ beats: reel.beats.filter((_, index) => index !== i) })}
-                >
-                  ✕
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <button
-        className="btn btn--small"
-        style={{ marginTop: 10 }}
-        onClick={() => set({ beats: [...reel.beats, { time: "", onScreen: "", voiceover: "" }] })}
-      >
-        Add a beat
-      </button>
-
-      <TextArea
-        label="Footage needed"
-        rows={4}
-        hint="one per line"
-        value={reel.footage.join("\n")}
-        onChange={(value) => set({ footage: value.split("\n").filter((line) => line.trim()) })}
-      />
-
-      <div className="row" style={{ marginTop: 12 }}>
+      <div className="row" style={{ marginBottom: 18 }}>
         {reel.cover ? (
           <button className="btn btn--small" onClick={onEditCover}>
             Edit the cover frame
@@ -768,11 +701,8 @@ function ScriptTab({
           1080 × 1920, with the words held inside the top 1440 px so the grid crop does not cut them.
         </span>
       </div>
-      <input type="hidden" value={iconNames.length} readOnly />
 
-      <div style={{ marginTop: 32, borderTop: "1px solid var(--border-default)", paddingTop: 8 }}>
-        <ReelPanel postId={post.id} />
-      </div>
+      <ReelEditor post={post} onChange={onChange} />
     </div>
   );
 }

@@ -65,6 +65,8 @@ export interface PlannedBeat extends BeatTiming {
   sourceKind: "video" | "image" | "missing";
   /** per-beat voiceover file, if you recorded them separately */
   voiceFile: string | null;
+  /** seconds into the clip to start from */
+  clipStart: number;
 }
 
 export interface ReelPlan {
@@ -107,10 +109,13 @@ export function planReel(post: Post, options: { clipsDir?: string; music?: strin
   const media = files.filter((f) => VIDEO_EXT.has(path.extname(f).toLowerCase()) || IMAGE_EXT.has(path.extname(f).toLowerCase()));
   const audio = files.filter((f) => AUDIO_EXT.has(path.extname(f).toLowerCase()));
 
-  const music =
-    options.music ??
-    (audio.find((f) => /music|track|bgm|song/i.test(f)) ? path.join(dir, audio.find((f) => /music|track|bgm|song/i.test(f))!) : null);
-  const voiceover = audio.find((f) => /voice|vo\b|narration/i.test(f) && !/^vo-?\d/i.test(f));
+  // An explicit choice on the post wins; otherwise fall back to the naming convention.
+  const chosenMusic = post.reel?.music && files.includes(post.reel.music) ? post.reel.music : undefined;
+  const namedMusic = audio.find((f) => /music|track|bgm|song/i.test(f));
+  const music = options.music ?? (chosenMusic ? path.join(dir, chosenMusic) : namedMusic ? path.join(dir, namedMusic) : null);
+
+  const chosenVoice = post.reel?.voiceover && files.includes(post.reel.voiceover) ? post.reel.voiceover : undefined;
+  const voiceover = chosenVoice ?? audio.find((f) => /voice|vo\b|narration/i.test(f) && !/^vo-?\d/i.test(f));
 
   const beats = post.reel?.beats ?? [];
   const claimed = new Set<string>();
@@ -142,6 +147,8 @@ export function planReel(post: Post, options: { clipsDir?: string; music?: strin
 
     const perBeatVoice = files.find((f) => new RegExp(`^vo-?0?${index + 1}\\.`, "i").test(f));
     const ext = file ? path.extname(file).toLowerCase() : "";
+    const rawStart = (beat as { clipStart?: unknown }).clipStart;
+    const clipStart = typeof rawStart === "number" && Number.isFinite(rawStart) && rawStart > 0 ? rawStart : 0;
 
     return {
       index,
@@ -152,6 +159,7 @@ export function planReel(post: Post, options: { clipsDir?: string; music?: strin
       source: file ? path.join(dir, file) : null,
       sourceKind: file ? (VIDEO_EXT.has(ext) ? "video" : "image") : "missing",
       voiceFile: perBeatVoice ? path.join(dir, perBeatVoice) : null,
+      clipStart,
     };
   });
 

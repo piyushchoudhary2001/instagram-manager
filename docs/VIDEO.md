@@ -1,12 +1,17 @@
 # Reels: cutting from the script
 
-The script in a post — timed beats, the words on screen, the voiceover — is also an edit list. `npm run reel` turns it into a cut.
+The script in a post — timed beats, the words on screen, the voiceover — is also an edit list. The **Script** tab turns it into a cut.
+
+Open a reel, drop your clips onto the footage strip, and you get a row per beat: the shot, which clip it uses, where in that clip it starts, how long it runs, and the words on screen. Change a length and the whole script re-times itself. Then **Build the cut** — ffmpeg runs in the background with a progress bar, and the result plays in the page.
+
+Needs `ffmpeg` on your machine: `brew install ffmpeg` on macOS, `sudo apt install ffmpeg` on Ubuntu, `winget install Gyan.FFmpeg` on Windows. The editor tells you if it is missing.
+
+The same build is available from a terminal when you want it:
 
 ```bash
 npm run reel -- 2026-10-22-kayaking-beginner-mistakes
+npm run reel -- <post-id> --plan        # just show which clip lands on which beat
 ```
-
-Needs `ffmpeg` on your machine: `brew install ffmpeg` on macOS, `sudo apt install ffmpeg` on Ubuntu.
 
 ## Where the clips go
 
@@ -20,7 +25,7 @@ content/media/<post-id>/
   vo-03.wav           → or one file per beat, if you record them separately
 ```
 
-A file that starts with a beat number is pinned to that beat. Everything else fills the remaining beats in order, so you can also just drop six clips in and let it assign them. A beat can also name its clip explicitly with `"clip": "sunset.mp4"` in the post JSON.
+Dropping files into the editor puts them here; copying them in by hand works just the same. A file that starts with a beat number is pinned to that beat, and everything else fills the remaining beats in order — or pick the clip per beat from the dropdown, which writes it into the script so the mapping is no longer a guess.
 
 Nothing for a beat? It gets a near-black card with the words on it, so the cut still plays and the gap is obvious. A clip shorter than its beat loops rather than freezing.
 

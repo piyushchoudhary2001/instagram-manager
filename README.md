@@ -19,7 +19,7 @@ Node 20.9 or newer. No database, no login, no cloud: the content lives in `conte
 | **Review queue** | Everything Claude has drafted, ordered by what needs you. |
 | **Post editor** | Slide-by-slide WYSIWYG, caption, reel script, facts, history. |
 | **Carousel studio** | Eight slide templates rendered to 1080 × 1350 from the Figma tokens, with the type auto-fitted so nothing ever overflows. |
-| **Reel cutter** | `npm run reel` turns a post's script into a 1080 × 1920 cut: beats trimmed to their times, captions burned in, graded, audio levelled. |
+| **Reel editor** | Drop clips in, set which clip and what trim each beat gets, and build a 1080 × 1920 cut in the page — captions burned in, graded, audio levelled. |
 | **Publishing** | Post an approved carousel or reel straight to Instagram, with the permalink written back into the post file. |
 | **Insights** | Saves, shares, reach and follows pulled back into each post, so the weekly review stops being manual. |
 | **Export pack** | A zip of PNGs, the caption and the alt text, ready to post by hand. |
@@ -75,7 +75,7 @@ Point Claude at this repo and ask for what you want — "draft the Oct 27 packin
 
 ## Reels
 
-Drop your clips in `content/media/<post-id>/`, name them after the beat they belong to, and run `npm run reel -- <post-id>`. It cuts to the times in the script, burns the on-screen text in Manrope, grades the clips to match, levels the voiceover with the music ducked under it, and renders the cover frame. Needs `ffmpeg`. The details are in `docs/VIDEO.md`.
+Open a reel and go to its **Script** tab. Drop your clips onto the footage strip, set which clip each beat uses and where it starts, then press **Build the cut**. It cuts to the times in the script, burns the on-screen text in Manrope, grades the clips to match, levels the voiceover with the music ducked under it, and renders the cover frame — then plays the result in the page. Needs `ffmpeg` installed; `npm run reel -- <post-id>` does the same thing from a terminal. The details are in `docs/VIDEO.md`.
 
 Adding a trending track stays manual — the API cannot do it, and on a new account the track is doing real work.
 

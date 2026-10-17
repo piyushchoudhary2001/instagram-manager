@@ -598,11 +598,20 @@ h3 {
 }
 
 .stage__frame {
+  display: block;
+  width: 100%;
+  padding: 0;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-2xl);
   overflow: hidden;
   background: var(--background-card);
   box-shadow: var(--shadow-card);
+  cursor: pointer;
+  text-align: left;
+}
+
+.stage__frame:hover {
+  border-color: var(--border-strong);
 }
 
 .stage__frame img {
@@ -850,5 +859,233 @@ h3 {
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------- reel editor */
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  margin: 8px 0 14px;
+  padding: 16px;
+  border: 1.5px dashed var(--border-brand-subtle);
+  border-radius: var(--radius-xl);
+  background: var(--background-card);
+  color: var(--text-tertiary);
+  font-size: 13.5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.dropzone:hover {
+  border-color: var(--border-strong);
+  color: var(--text-secondary);
+}
+
+.dropzone--over {
+  border-color: var(--orange-500);
+  background: var(--orange-50);
+  color: var(--text-primary);
+}
+
+.clips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(126px, 1fr));
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.clip {
+  position: relative;
+  margin: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--background-card);
+}
+
+.clip img {
+  display: block;
+  width: 100%;
+  height: 84px;
+  object-fit: cover;
+  background: var(--background-brand-subtle);
+}
+
+.clip figcaption {
+  display: grid;
+  gap: 2px;
+  padding: 7px 9px 9px;
+  font-size: 11px;
+}
+
+.clip__name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clip__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(15, 15, 15, 0.66);
+  color: #fafafa;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.beatlist {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.beatrow {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 8px;
+  align-items: start;
+  padding: 8px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--background-card);
+}
+
+.beatrow__shot {
+  grid-row: span 2;
+}
+
+.beatrow:hover {
+  border-color: var(--border-brand-subtle);
+}
+
+.beatrow__shot {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  align-self: start;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--background-brand-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.beatrow__shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.beatrow__empty {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.beatrow__num {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  min-width: 18px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  background: rgba(15, 15, 15, 0.72);
+  color: #fafafa;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.beatrow__body {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.beatrow__body .input {
+  height: 34px;
+  font-size: 13.5px;
+}
+
+.beatrow__vo {
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+.beatrow__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+
+/* A select sized to sit in a row of controls rather than a form. */
+.select--compact {
+  height: 34px;
+  padding: 0 8px;
+  font-size: 12.5px;
+  line-height: 32px;
+}
+
+.beatrow__controls .select {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+.beatrow__controls .select {
+  height: 34px;
+  padding: 0 8px;
+  font-size: 12.5px;
+  line-height: 32px;
+}
+
+.beatrow__field {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+}
+
+.beatrow__field .input {
+  width: 58px;
+  height: 34px;
+  padding: 0 7px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.buildbar {
+  position: sticky;
+  bottom: 56px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  background: var(--background-card);
+  box-shadow: var(--shadow-card);
+}
+
+@media (max-width: 900px) {
+  .beatrow {
+    grid-template-columns: 76px minmax(0, 1fr);
   }
 }

@@ -78,6 +78,8 @@ export const BeatSchema = z.looseObject({
   shot: text.optional(),
   /** file name inside content/media/<post-id>/, when a beat should use a particular clip */
   clip: text.optional(),
+  /** seconds into that clip to start from, when the good part is not at the beginning */
+  clipStart: z.number().optional(),
 });
 export type Beat = z.infer<typeof BeatSchema>;
 
@@ -86,6 +88,9 @@ export const ReelSchema = z.looseObject({
   hook: text.default(""),
   beats: z.array(BeatSchema).default([]),
   audio: text.default(""),
+  /** file names in the post's media folder, when the bed or the narration should not be guessed by name */
+  music: text.optional(),
+  voiceover: text.optional(),
   captionsLanguage: z.enum(["en", "hi", "hinglish"]).default("en"),
   footage: z.array(text).default([]),
   cover: SlideSchema.optional(),

@@ -91,11 +91,16 @@ async function buildSegment(
 
   if (beat.sourceKind === "video" && beat.source) {
     const info = await probe(beat.source);
-    if (info.duration > 0 && info.duration < duration - 0.05) {
+    const available = info.duration > 0 ? info.duration - beat.clipStart : 0;
+    if (available > 0 && available < duration - 0.05) {
       // Short clip: loop it rather than freezing on the last frame.
+      // -stream_loop and -ss are both input options and must come before -i, in that order.
       input.push("-stream_loop", "-1");
-      warnings.push(`Beat ${beat.index + 1}: the clip is ${info.duration.toFixed(1)}s for a ${duration.toFixed(1)}s beat, so it loops.`);
+      warnings.push(
+        `Beat ${beat.index + 1}: ${available.toFixed(1)}s of clip for a ${duration.toFixed(1)}s beat, so it loops.`,
+      );
     }
+    if (beat.clipStart > 0) input.push("-ss", String(beat.clipStart));
     input.push("-i", beat.source, "-t", String(duration));
     filters.push(...FRAME, ...grade);
   } else if (beat.sourceKind === "image" && beat.source) {
