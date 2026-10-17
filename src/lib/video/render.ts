@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { Post } from "../schema";
 import { renderSlideSvg, svgToPng } from "../render/render";
-import { drawtextFilter, handleLine, layoutCaption, REEL } from "./captions";
-import { ffmpeg, probe } from "./ffmpeg";
+import { captionOverlayPng } from "./captions";
+import { capabilities, ffmpeg, probe } from "./ffmpeg";
 import { toSrt, type PlannedBeat, type ReelPlan } from "./beats";
 
 /**
@@ -54,23 +54,64 @@ async function writeText(file: string, text: string): Promise<void> {
   await fs.writeFile(file, text, "utf8");
 }
 
-/** Caption drawtext filters for one beat, with each line's text written to its own file. */
-async function captionFilters(beat: PlannedBeat, workDir: string, isHook: boolean, handle: string, withHandle: boolean): Promise<string[]> {
-  const block = layoutCaption(beat.onScreen, isHook ? "hook" : "beat");
-  const filters: string[] = [];
-  for (let i = 0; i < block.lines.length; i++) {
-    const line = block.lines[i];
-    const file = path.join(workDir, `t${String(beat.index).padStart(2, "0")}-${i}.txt`);
-    await writeText(file, line.text);
-    filters.push(drawtextFilter(line, file));
+/**
+ * Writes the caption layer for one beat as a transparent PNG, or null when the beat has
+ * no words. Rendered by the slide engine, so the type matches the carousels exactly.
+ */
+async function captionLayer(
+  beat: PlannedBeat,
+  workDir: string,
+  isHook: boolean,
+  handle: string,
+  withHandle: boolean,
+  warnings: string[],
+): Promise<string | null> {
+  const overlay = await captionOverlayPng({
+    text: beat.onScreen,
+    style: isHook ? "hook" : "beat",
+    handle: withHandle ? handle : undefined,
+  });
+  if (!overlay) return null;
+  if (overlay.overflow) warnings.push(`Beat ${beat.index + 1}: the words on screen are long, so they are set small.`);
+  const file = path.join(workDir, `cap-${String(beat.index).padStart(2, "0")}.png`);
+  await fs.writeFile(file, overlay.png);
+  return file;
+}
+
+
+/**
+ * Which encoders this ffmpeg actually has. Instagram needs H.264 and AAC, so if neither is
+ * present the build stops with something you can act on rather than a wall of ffmpeg output.
+ */
+interface Encoders {
+  video: { codec: string; args: string[] };
+  audio: { codec: string; args: string[] };
+}
+
+let encoderChoice: Encoders | null = null;
+
+async function encoders(): Promise<Encoders> {
+  if (encoderChoice) return encoderChoice;
+  const caps = await capabilities();
+
+  let video: Encoders["video"] | null = null;
+  if (caps.encoders.has("libx264")) video = { codec: "libx264", args: ["-preset", "veryfast", "-crf", "18"] };
+  else if (caps.encoders.has("h264_videotoolbox")) video = { codec: "h264_videotoolbox", args: ["-b:v", "8M"] };
+  else if (caps.encoders.has("libopenh264")) video = { codec: "libopenh264", args: ["-b:v", "8M"] };
+  if (!video) {
+    throw new Error(
+      "This ffmpeg has no H.264 encoder, which Instagram needs. Install a full build: macOS `brew install ffmpeg`, Ubuntu `sudo apt install ffmpeg`, Windows `winget install Gyan.FFmpeg`.",
+    );
   }
-  if (withHandle) {
-    const line = handleLine(handle);
-    const file = path.join(workDir, `h${String(beat.index).padStart(2, "0")}.txt`);
-    await writeText(file, line.text);
-    filters.push(drawtextFilter(line, file));
-  }
-  return filters;
+
+  let audio: Encoders["audio"] | null = null;
+  if (caps.encoders.has("aac")) audio = { codec: "aac", args: [] };
+  else if (caps.encoders.has("aac_at")) audio = { codec: "aac_at", args: [] };
+  else if (caps.encoders.has("libfdk_aac")) audio = { codec: "libfdk_aac", args: [] };
+  if (!audio) throw new Error("This ffmpeg has no AAC encoder. Install a full ffmpeg build.");
+
+  encoderChoice = { video, audio };
+  return encoderChoice;
 }
 
 async function buildSegment(
@@ -82,12 +123,15 @@ async function buildSegment(
 ): Promise<string> {
   const out = path.join(workDir, `seg-${String(beat.index).padStart(2, "0")}.mp4`);
   const isHook = beat.index === 0;
-  const grade = GRADES[options.grade];
-  const text = options.captions ? await captionFilters(beat, workDir, isHook, options.handle, beat.index === plan.beats.length - 1) : [];
+  const caps = await capabilities();
+  const grade = GRADES[options.grade].filter((filter) => caps.filters.has(filter.split("=")[0]));
   const duration = Math.max(0.4, beat.duration);
+  const overlay = options.captions
+    ? await captionLayer(beat, workDir, isHook, options.handle, beat.index === plan.beats.length - 1, warnings)
+    : null;
 
   const input: string[] = [];
-  const filters: string[] = [];
+  const chain: string[] = [];
 
   if (beat.sourceKind === "video" && beat.source) {
     const info = await probe(beat.source);
@@ -101,38 +145,60 @@ async function buildSegment(
       );
     }
     if (beat.clipStart > 0) input.push("-ss", String(beat.clipStart));
-    input.push("-i", beat.source, "-t", String(duration));
-    filters.push(...FRAME, ...grade);
+    input.push("-i", beat.source);
+    chain.push(...FRAME, ...grade);
   } else if (beat.sourceKind === "image" && beat.source) {
-    // A still gets a slow push so it does not read as a freeze.
-    const frames = Math.round(duration * FPS);
-    input.push("-loop", "1", "-i", beat.source, "-t", String(duration));
-    filters.push(
-      "scale=1620:2880:force_original_aspect_ratio=increase",
-      "crop=1620:2880",
-      `zoompan=z='min(zoom+0.0004,1.10)':d=${frames}:s=1080x1920:fps=${FPS}`,
-      ...grade,
-    );
+    input.push("-loop", "1", "-i", beat.source);
+    if (caps.filters.has("zoompan")) {
+      // A still gets a slow push so it does not read as a freeze.
+      const frames = Math.round(duration * FPS);
+      chain.push(
+        "scale=1620:2880:force_original_aspect_ratio=increase",
+        "crop=1620:2880",
+        `zoompan=z='min(zoom+0.0004,1.10)':d=${frames}:s=1080x1920:fps=${FPS}`,
+        ...grade,
+      );
+    } else {
+      chain.push(...FRAME, ...grade);
+    }
   } else {
     // No footage for this beat: a brand card so the cut still plays and the gap is obvious.
-    input.push("-f", "lavfi", "-i", `color=c=0x141414:s=1080x1920:r=${FPS}:d=${duration}`);
+    input.push("-f", "lavfi", "-i", `color=c=0x141414:s=1080x1920:r=${FPS}`);
+    chain.push(`fps=${FPS}`);
     warnings.push(`Beat ${beat.index + 1} has no clip — a placeholder card is in its place.`);
   }
 
-  filters.push("format=yuv420p", ...text);
+  const args: string[] = [...input];
+  if (overlay) {
+    // The caption is a second input, composited on top — no drawtext, so no dependency on
+    // an ffmpeg built with libfreetype.
+    args.push("-loop", "1", "-i", overlay);
+    const graph = `[0:v]${[...chain, "format=yuv420p"].join(",")}[base];[base][1:v]overlay=0:0:format=auto[ovl];[ovl]format=yuv420p[vout]`;
+    args.push("-filter_complex", graph, "-map", "[vout]");
+  } else {
+    args.push("-vf", [...chain, "format=yuv420p"].join(","));
+  }
+  const { video } = await encoders();
+  args.push("-an", "-t", String(duration), "-c:v", video.codec, ...video.args, "-r", String(FPS), out);
 
-  await ffmpeg(
-    [...input, "-vf", filters.join(","), "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-r", String(FPS), out],
-    `beat ${beat.index + 1}`,
-  );
+  await ffmpeg(args, `beat ${beat.index + 1}`);
   return out;
 }
 
 /** Music under voice: the music ducks when the voice is there, and the whole thing lands at -14 LUFS. */
 async function buildAudio(plan: ReelPlan, workDir: string, duration: number, warnings: string[]): Promise<string> {
   const out = path.join(workDir, "audio.m4a");
+  const { audio } = await encoders();
+  const caps = await capabilities();
   const perBeatVoice = plan.beats.filter((beat) => beat.voiceFile);
-  const hasVoice = Boolean(plan.voiceover) || perBeatVoice.length > 0;
+
+  // Every stage is optional: a minimal ffmpeg build still produces a usable track, just
+  // without the levelling or the ducking.
+  const level = caps.filters.has("loudnorm") ? "loudnorm=I=-14:TP=-1.5:LRA=11," : "";
+  const finish = `${level}aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo[out]`;
+  if (!caps.filters.has("loudnorm")) {
+    warnings.push("This ffmpeg has no loudnorm filter, so the audio is not levelled to Instagram's target.");
+  }
 
   const inputs: string[] = [];
   const graph: string[] = [];
@@ -149,7 +215,8 @@ async function buildAudio(plan: ReelPlan, workDir: string, duration: number, war
     for (const beat of perBeatVoice) {
       inputs.push("-i", beat.voiceFile!);
       const label = `v${index}`;
-      graph.push(`[${index}:a]aresample=48000,adelay=${Math.round(beat.start * 1000)}|${Math.round(beat.start * 1000)}[${label}]`);
+      const delay = Math.round(beat.start * 1000);
+      graph.push(`[${index}:a]aresample=48000,adelay=${delay}|${delay}[${label}]`);
       labels.push(`[${label}]`);
       index += 1;
     }
@@ -161,27 +228,50 @@ async function buildAudio(plan: ReelPlan, workDir: string, duration: number, war
     inputs.push("-stream_loop", "-1", "-i", plan.music);
     const musicIn = `[${index}:a]`;
     index += 1;
-    if (voiceLabel) {
+    if (voiceLabel && caps.filters.has("sidechaincompress")) {
       // The voice is needed twice — once to key the ducking, once in the mix — and a
       // filter output can only be consumed once, so it is split first.
       graph.push(`[${voiceLabel}]asplit=2[vokey][vomix]`);
       graph.push(`${musicIn}aresample=48000,volume=0.35[music]`);
       graph.push(`[music][vokey]sidechaincompress=threshold=0.05:ratio=8:attack=20:release=400[ducked]`);
-      graph.push(`[ducked][vomix]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo[out]`);
+      graph.push(`[ducked][vomix]amix=inputs=2:duration=first:normalize=0,${finish}`);
+    } else if (voiceLabel) {
+      // No ducking available: hold the music lower throughout so the voice still carries.
+      graph.push(`${musicIn}aresample=48000,volume=0.18[music]`);
+      graph.push(`[music][${voiceLabel}]amix=inputs=2:duration=first:normalize=0,${finish}`);
+      warnings.push("This ffmpeg has no sidechaincompress filter, so the music sits low instead of ducking under the voice.");
     } else {
-      graph.push(`${musicIn}aresample=48000,volume=0.9,loudnorm=I=-14:TP=-1.5:LRA=11,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo[out]`);
+      graph.push(`${musicIn}aresample=48000,volume=0.9,${finish}`);
     }
   } else if (voiceLabel) {
-    graph.push(`[${voiceLabel}]loudnorm=I=-14:TP=-1.5:LRA=11,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo[out]`);
+    graph.push(`[${voiceLabel}]${finish}`);
   } else {
     // No audio at all: a silent track, because a reel without an audio stream can be rejected.
-    inputs.push("-f", "lavfi", "-i", `anullsrc=channel_layout=stereo:sample_rate=48000`);
+    inputs.push("-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000");
     graph.push(`[${index}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo[out]`);
     warnings.push("No music or voiceover found, so the reel is silent. Add the track in Instagram before posting.");
   }
 
   await ffmpeg(
-    [...inputs, "-filter_complex", graph.join(";"), "-map", "[out]", "-t", String(duration), "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", out],
+    [
+      ...inputs,
+      "-filter_complex",
+      graph.join(";"),
+      "-map",
+      "[out]",
+      "-t",
+      String(duration),
+      "-c:a",
+      audio.codec,
+      ...audio.args,
+      "-b:a",
+      "192k",
+      "-ar",
+      "48000",
+      "-ac",
+      "2",
+      out,
+    ],
     "audio",
   );
   return out;
@@ -231,9 +321,10 @@ export async function buildReel(post: Post, plan: ReelPlan, options: BuildOption
   const audio = await buildAudio(plan, workDir, duration, warnings);
 
   say("Writing the reel");
+  const { audio: audioCodec } = await encoders();
   const video = path.join(outDir, "reel.mp4");
   await ffmpeg(
-    ["-i", silentVideo, "-i", audio, "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", "-shortest", "-movflags", "+faststart", video],
+    ["-i", silentVideo, "-i", audio, "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", audioCodec.codec, ...audioCodec.args, "-b:a", "192k", "-ar", "48000", "-ac", "2", "-shortest", "-movflags", "+faststart", video],
     "mux",
   );
 

@@ -69,3 +69,42 @@ export async function probe(file: string): Promise<ProbeResult> {
     return { duration: 0, width: 0, height: 0, hasAudio: false, fps: 30 };
   }
 }
+
+/**
+ * What this particular ffmpeg can actually do.
+ *
+ * Builds vary a lot: some ship without libfreetype (no drawtext), some are compiled
+ * LGPL-only (no eq, no unsharp, no libx264). Rather than failing halfway through a cut
+ * with "No such filter", the pipeline asks first and either degrades or says plainly
+ * what to install.
+ */
+export interface Capabilities {
+  filters: Set<string>;
+  encoders: Set<string>;
+}
+
+let cached: Capabilities | null = null;
+
+export async function capabilities(): Promise<Capabilities> {
+  if (cached) return cached;
+  const read = async (flag: string): Promise<Set<string>> => {
+    try {
+      const { stdout } = await run("ffmpeg", ["-hide_banner", flag], { maxBuffer: 1 << 24 });
+      const names = new Set<string>();
+      for (const line of stdout.split("\n")) {
+        // " T.C drawtext        V->V  Draw text…"  /  " V....D libx264  …"
+        const match = /^\s*[A-Z.]{3,6}\s+(\S+)/.exec(line);
+        if (match) names.add(match[1]);
+      }
+      return names;
+    } catch {
+      return new Set<string>();
+    }
+  };
+  cached = { filters: await read("-filters"), encoders: await read("-encoders") };
+  return cached;
+}
+
+export function resetCapabilities(): void {
+  cached = null;
+}
